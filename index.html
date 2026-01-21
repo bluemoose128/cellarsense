@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="AI-powered wine recommendations from a certified sommelier. Perfect pairings for dinner or your wedding.">
+    
+    <title>CellarSense | AI Sommelier</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --wine-deep: #1a1a2e;
+            --wine-burgundy: #722f37;
+            --wine-merlot: #8b3a3a;
+            --wine-rose: #c97b7b;
+            --wine-blush: #e8d4d4;
+            --wine-cream: #f5f0eb;
+            --wine-gold: #c9a227;
+            --wine-champagne: #f7e7ce;
+            --text-primary: #1a1a2e;
+            --text-secondary: #5a5a6e;
+            --text-light: #8a8a9e;
+            --white: #ffffff;
+            --shadow-soft: 0 4px 20px rgba(26, 26, 46, 0.08);
+            --shadow-medium: 0 8px 40px rgba(26, 26, 46, 0.12);
+            --shadow-strong: 0 12px 60px rgba(26, 26, 46, 0.16);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 32px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--wine-cream);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .app {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            border-bottom: 1px solid rgba(26, 26, 46, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--wine-burgundy), var(--wine-merlot));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .header-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--wine-burgundy);
+            background: var(--wine-blush);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: var(--white);
+            padding: 0 1rem;
+            gap: 0.25rem;
+            border-bottom: 1px solid rgba(26, 26, 46, 0.06);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 1rem 0.5rem;
+            background: none;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .nav-tab:hover { color: var(--text-secondary); }
+
+        .nav-tab.active { color: var(--wine-burgundy); }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--wine-burgundy);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .main {
+            flex: 1;
+            padding: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .screen.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header { margin-bottom: 1.5rem; }
+
+        .section-title {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 1rem;
+        }
+
+        .form-group { margin-bottom: 1.25rem; }
+
+        .form-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            border: 2px solid rgba(26, 26, 46, 0.1);
+            border-radius: var(--radius-md);
+            background: var(--white);
+            color: var(--text-primary);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--wine-burgundy);
+            box-shadow: 0 0 0 4px rgba(114, 47, 55, 0.1);
+        }
+
+        .form-input::placeholder { color: var(--text-light); }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235a5a6e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25rem;
+            padding-right: 2.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--wine-burgundy), var(--wine-merlot));
+            color: var(--white);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-secondary {
+            background: var(--wine-blush);
+            color: var(--wine-burgundy);
+        }
+
+        .btn-secondary:hover {
+            background: var(--wine-rose);
+            color: var(--white);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-container { margin-top: 1.5rem; }
+
+        .wine-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-soft);
+            border-left: 4px solid var(--wine-burgundy);
+        }
+
+        .wine-card.white-wine { border-left-color: var(--wine-gold); }
+        .wine-card.rose-wine { border-left-color: var(--wine-rose); }
+        .wine-card.sparkling-wine {
+            border-left-color: var(--wine-champagne);
+            background: linear-gradient(135deg, var(--white), var(--wine-champagne));
+        }
+
+        .wine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .wine-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .wine-type {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--wine-burgundy);
+            background: var(--wine-blush);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .wine-region {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .wine-notes {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .wine-pairing-reason {
+            font-size: 0.875rem;
+            color: var(--wine-burgundy);
+            font-style: italic;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(26, 26, 46, 0.06);
+        }
+
+        .wine-price {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .price-badge {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .locked-section {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            margin-top: 1.5rem;
+        }
+
+        .locked-content {
+            filter: blur(8px);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.95));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .locked-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--wine-burgundy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: var(--white);
+            font-size: 1.25rem;
+        }
+
+        .locked-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .locked-text {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            max-width: 280px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--wine-deep), var(--wine-burgundy));
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            color: var(--white);
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .cta-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-text {
+            font-size: 0.9375rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .cta-price {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .cta-price-note {
+            font-size: 0.8125rem;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-cta {
+            background: var(--white);
+            color: var(--wine-burgundy);
+            font-weight: 700;
+            padding: 1rem 2rem;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .btn-cta:hover {
+            background: var(--wine-champagne);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        .cta-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .cta-feature::before {
+            content: '✓';
+            font-weight: 700;
+            color: var(--wine-gold);
+        }
+
+        .admin-badge {
+            background: var(--wine-gold);
+            color: var(--wine-deep);
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(26, 26, 46, 0.1);
+            margin: 1.5rem 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--wine-blush);
+            border-top-color: var(--wine-burgundy);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chip {
+            padding: 0.5rem 1rem;
+            background: var(--wine-cream);
+            border: 2px solid rgba(26, 26, 46, 0.1);
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chip:hover { border-color: var(--wine-burgundy); }
+
+        .chip.selected {
+            background: var(--wine-burgundy);
+            border-color: var(--wine-burgundy);
+            color: var(--white);
+        }
+
+        .budget-tier {
+            font-weight: 700;
+            color: var(--wine-burgundy);
+            margin-right: 0.25rem;
+            font-size: 0.9em;
+        }
+
+        .chip.selected .budget-tier { color: var(--wine-gold); }
+
+        .calc-result {
+            background: linear-gradient(135deg, var(--wine-blush), var(--wine-champagne));
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .calc-row:not(:last-child) {
+            border-bottom: 1px solid rgba(26, 26, 46, 0.1);
+        }
+
+        .calc-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .calc-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .footer {
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            background: var(--white);
+            border-top: 1px solid rgba(26, 26, 46, 0.06);
+        }
+
+        .footer a {
+            color: var(--wine-burgundy);
+            text-decoration: none;
+        }
+
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            background: #ef4444;
+            color: white;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Preview Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .preview-section {
+            background: var(--wine-cream);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--wine-burgundy);
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-editable {
+            width: 100%;
+            border: 1px solid rgba(26, 26, 46, 0.1);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        @media (min-width: 768px) {
+            .main { padding: 2rem; }
+            .section-title { font-size: 2.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <a href="#" class="logo" onclick="showScreen('restaurant'); return false;">
+                <div class="logo-icon">🍷</div>
+                <span class="logo-text">CellarSense</span>
+            </a>
+            <span class="header-badge">WSET Certified</span>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-screen="restaurant" onclick="showScreen('restaurant')">Restaurant</button>
+            <button class="nav-tab" data-screen="wedding" onclick="showScreen('wedding')">Wedding</button>
+            <button class="nav-tab" data-screen="admin" onclick="showScreen('admin')" id="admin-tab" style="display: none;">Admin</button>
+        </nav>
+
+        <main class="main">
+            <!-- Restaurant Mode -->
+            <section id="screen-restaurant" class="screen active">
+                <div class="section-header">
+                    <h1 class="section-title">What are you eating?</h1>
+                    <p class="section-subtitle">Tell me your dish and I'll find the perfect wine pairing.</p>
+                </div>
+
+                <div class="card">
+                    <div class="form-group">
+                        <label class="form-label">Your Dish</label>
+                        <input type="text" class="form-input" id="dish-input" placeholder="e.g., Grilled salmon with lemon butter">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Budget Range</label>
+                        <div class="chip-group">
+                            <button class="chip selected" data-budget="$" onclick="selectBudget(this)"><span class="budget-tier">$</span> Under $15</button>
+                            <button class="chip" data-budget="$$" onclick="selectBudget(this)"><span class="budget-tier">$$</span> $15–30</button>
+                            <button class="chip" data-budget="$$$" onclick="selectBudget(this)"><span class="budget-tier">$$$</span> $30+</button>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="getWinePairings()">Find My Wine</button>
+                </div>
+
+                <div id="restaurant-results" class="results-container"></div>
+            </section>
+
+            <!-- Wedding Mode -->
+            <section id="screen-wedding" class="screen">
+                <div class="section-header">
+                    <h1 class="section-title">Wedding Wine Guide</h1>
+                    <p class="section-subtitle">Stop Googling "what wine for wedding" — get a personalized plan in one call.</p>
+                </div>
+
+                <div class="card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Your Name</label>
+                            <input type="text" class="form-input" id="wedding-name" placeholder="Sarah & Mike">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Wedding Date</label>
+                            <input type="date" class="form-input" id="wedding-date">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Guest Count</label>
+                            <input type="number" class="form-input" id="wedding-guests" placeholder="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Wine Budget</label>
+                            <select class="form-input" id="wedding-budget">
+                                <option value="">Select budget</option>
+                                <option value="under-500">Less than $500</option>
+                                <option value="500-1000">$500 – $1,000</option>
+                                <option value="1000-2000">$1,000 – $2,000</option>
+                                <option value="2000-3500">$2,000 – $3,500</option>
+                                <option value="3500+">$3,500+</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Wedding Vibe / Theme</label>
+                        <div class="chip-group" id="vibe-chips">
+                            <button class="chip" data-vibe="elegant" onclick="selectVibe(this)">Elegant & Classic</button>
+                            <button class="chip" data-vibe="rustic" onclick="selectVibe(this)">Rustic & Cozy</button>
+                            <button class="chip" data-vibe="mediterranean" onclick="selectVibe(this)">Mediterranean</button>
+                            <button class="chip" data-vibe="modern" onclick="selectVibe(this)">Modern & Minimal</button>
+                            <button class="chip" data-vibe="garden" onclick="selectVibe(this)">Garden Party</button>
+                            <button class="chip" data-vibe="beach" onclick="selectVibe(this)">Beach / Tropical</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Main Course</label>
+                        <input type="text" class="form-input" id="wedding-food" placeholder="e.g., Beef tenderloin, chicken, fish, vegetarian options">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="generateWeddingPreview()">See My Preview</button>
+                </div>
+
+                <div id="wedding-results"></div>
+            </section>
+
+            <!-- Admin Panel -->
+            <section id="screen-admin" class="screen">
+                <div class="section-header">
+                    <h1 class="section-title">Generate Client PDF <span class="admin-badge">Admin</span></h1>
+                    <p class="section-subtitle">Create a personalized wedding wine guide for your client.</p>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Client Details</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Couple's Names</label>
+                            <input type="text" class="form-input" id="pdf-names" placeholder="Sarah & Mike">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Wedding Date</label>
+                            <input type="date" class="form-input" id="pdf-date">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Venue Name</label>
+                            <input type="text" class="form-input" id="pdf-venue" placeholder="The Estate at Sunset Bay">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Venue Type</label>
+                            <select class="form-input" id="pdf-venue-type">
+                                <option value="ballroom">Ballroom / Hotel</option>
+                                <option value="outdoor">Outdoor / Garden</option>
+                                <option value="vineyard">Vineyard / Winery</option>
+                                <option value="beach">Beach / Waterfront</option>
+                                <option value="rustic">Barn / Rustic</option>
+                                <option value="modern">Modern / Loft</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Guest Count</label>
+                            <input type="number" class="form-input" id="pdf-guests" placeholder="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Event Duration (hours)</label>
+                            <input type="number" class="form-input" id="pdf-hours" placeholder="5" value="5">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Total Wine Budget</label>
+                            <input type="number" class="form-input" id="pdf-budget" placeholder="2000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Location (City, State)</label>
+                            <input type="text" class="form-input" id="pdf-location" placeholder="St. Petersburg, FL">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Bar Setup</label>
+                            <select class="form-input" id="pdf-bar-type">
+                                <option value="wine-focus">Wine-focused (wine is primary drink)</option>
+                                <option value="mixed">Mixed bar (beer, cocktails, and wine)</option>
+                                <option value="wine-beer">Wine and beer only</option>
+                                <option value="toast-only">Toast only (sparkling for toast, limited table wine)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Guest Drinking Level</label>
+                            <select class="form-input" id="pdf-drinking-level">
+                                <option value="moderate">Moderate (1-2 glasses per person)</option>
+                                <option value="light">Light (0.5 glasses per person)</option>
+                                <option value="heavy">Heavy (2-3 glasses per person)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Include Rosé?</label>
+                            <select class="form-input" id="pdf-include-rose">
+                                <option value="yes">Yes, include rosé</option>
+                                <option value="no">No rosé needed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Red vs. White Balance</label>
+                            <select class="form-input" id="pdf-red-white-balance">
+                                <option value="balanced">Balanced (50/50)</option>
+                                <option value="more-red">More red drinkers (60/40)</option>
+                                <option value="more-white">More white drinkers (40/60)</option>
+                                <option value="heavy-red">Mostly red (75/25)</option>
+                                <option value="heavy-white">Mostly white (25/75)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sparkling Wine Usage</label>
+                            <select class="form-input" id="pdf-sparkling-usage">
+                                <option value="toast-only">Toast only</option>
+                                <option value="toast-and-bar">Toast + available at bar</option>
+                                <option value="no-toast">Bar only (no formal toast)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Wedding Theme & Preferences</h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Wedding Vibe / Theme</label>
+                        <input type="text" class="form-input" id="pdf-vibe" placeholder="e.g., Mediterranean coastal elegance">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Food Being Served</label>
+                        <textarea class="form-input" id="pdf-food" placeholder="e.g., Cocktail hour: passed apps (bruschetta, shrimp). Dinner: choice of beef tenderloin, grilled salmon, or mushroom risotto."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Client Preferences (from consultation)</label>
+                        <textarea class="form-input" id="pdf-preferences" placeholder="e.g., Bride loves rosé, groom prefers bold reds. Want to avoid oaky Chardonnay."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Special Notes</label>
+                        <textarea class="form-input" id="pdf-notes" placeholder="e.g., Grandmother is from Italy, would love to include an Italian wine."></textarea>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Quantity Calculator</h3>
+                    <div class="calc-result" id="calc-results">
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">Enter guest count above to calculate quantities.</p>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <button class="btn btn-primary" onclick="previewPDF()" style="margin-bottom: 0.5rem;">Preview & Edit Guide</button>
+                    <button class="btn btn-secondary" onclick="generatePDF()" style="width: 100%;">Generate PDF Directly</button>
+
+                    <div id="pdf-status" style="margin-top: 1rem;"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>CellarSense.ai — Wine recommendations from a certified sommelier</p>
+            <p style="margin-top: 0.5rem;">Questions? <a href="/cdn-cgi/l/email-protection#e0818e94888f8e99a083858c8c819293858e9385ce8189"><span class="__cf_email__" data-cfemail="eb8a859f83848592ab888e87878a99988e85988ec58a82">[email&#160;protected]</span></a></p>
+        </footer>
+    </div>
+
+    <!-- Preview/Edit Modal -->
+    <div class="modal-overlay" id="preview-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Preview & Edit Guide</h2>
+                <button class="modal-close" onclick="closePreviewModal()">×</button>
+            </div>
+            
+            <div class="preview-section">
+                <div class="preview-section-title">Your Vision</div>
+                <textarea class="preview-editable" id="preview-vision"></textarea>
+            </div>
+
+            <div class="preview-section">
+                <div class="preview-section-title">Tailored For You</div>
+                <textarea class="preview-editable" id="preview-personalization"></textarea>
+            </div>
+
+            <div class="preview-section">
+                <div class="preview-section-title">Sparkling Wine Description</div>
+                <textarea class="preview-editable" id="preview-sparkling"></textarea>
+            </div>
+
+            <div class="preview-section">
+                <div class="preview-section-title">White Wine Description</div>
+                <textarea class="preview-editable" id="preview-white"></textarea>
+            </div>
+
+            <div class="preview-section">
+                <div class="preview-section-title">Red Wine Description</div>
+                <textarea class="preview-editable" id="preview-red"></textarea>
+            </div>
+
+            <div class="preview-section">
+                <div class="preview-section-title">Rosé Description</div>
+                <textarea class="preview-editable" id="preview-rose"></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closePreviewModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="generatePDFFromPreview()">Generate PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // ============================================
+        // WINE DATABASE
+        // ============================================
+        const wineDatabase = {
+            red: [
+                { name: "Cabernet Sauvignon", region: "Napa Valley, USA", type: "Red", notes: "Full-bodied with dark fruit, cedar, and vanilla. Firm tannins and long finish.", pairs: ["beef", "steak", "lamb", "hearty", "grilled", "bbq", "burger", "ribeye"], vibe: ["elegant", "classic", "modern"], priceRange: { "$": "~$14", "$$": "~$28", "$$$": "~$75" }, bottles: { "$": "Avalon Napa Cabernet", "$$": "Robert Mondavi Napa Cabernet", "$$$": "Caymus Cabernet Sauvignon" } },
+                { name: "Pinot Noir", region: "Willamette Valley, USA", type: "Red", notes: "Elegant and silky with cherry, raspberry, and earthy undertones. Bright acidity.", pairs: ["salmon", "duck", "mushroom", "chicken", "turkey", "pork", "tuna"], vibe: ["elegant", "garden", "rustic"], priceRange: { "$": "~$14", "$$": "~$28", "$$$": "~$65" }, bottles: { "$": "Erath Oregon Pinot Noir", "$$": "Domaine Drouhin Oregon", "$$$": "Beaux Frères Willamette Valley" } },
+                { name: "Pinot Noir", region: "Burgundy, France", type: "Red", notes: "Refined and complex with red fruit, earth, and subtle oak. Classic Old World elegance.", pairs: ["duck", "game", "mushroom", "chicken", "pork"], vibe: ["elegant", "classic", "romantic"], priceRange: { "$": "~$18", "$$": "~$28", "$$$": "~$48" }, bottles: { "$": "Louis Jadot Bourgogne", "$$": "Philippe Girard Savigny-les-Beaune", "$$$": "Domaine Faiveley Mercury" } },
+                { name: "Malbec", region: "Mendoza, Argentina", type: "Red", notes: "Plush and velvety with blackberry, plum, and hints of cocoa and violet.", pairs: ["steak", "beef", "grilled", "bbq", "empanadas", "burger"], vibe: ["rustic", "modern", "festive"], priceRange: { "$": "~$10", "$$": "~$18", "$$$": "~$40" }, bottles: { "$": "Alamos Malbec", "$$": "Catena Malbec", "$$$": "Catena Alta Malbec" } },
+                { name: "Sangiovese", region: "Tuscany, Italy", type: "Red", notes: "Bright cherry and plum with herbs, tobacco, and earthy notes. Vibrant acidity.", pairs: ["pasta", "pizza", "tomato", "italian", "lasagna", "osso buco"], vibe: ["mediterranean", "rustic", "elegant"], priceRange: { "$": "~$12", "$$": "~$24", "$$$": "~$52" }, bottles: { "$": "Ruffino Chianti", "$$": "Arceno Chianti Classico", "$$$": "Antinori Marchese Chianti Classico Riserva" } },
+                { name: "Syrah / Shiraz", region: "Rhône Valley, France", type: "Red", notes: "Bold and peppery with dark fruit, smoke, and savory herbs. Full-bodied with structure.", pairs: ["lamb", "game", "grilled", "stews", "charcuterie", "bbq", "ribs"], vibe: ["rustic", "elegant", "modern"], priceRange: { "$": "~$14", "$$": "~$28", "$$$": "~$48" }, bottles: { "$": "E. Guigal Côtes du Rhône", "$$": "M. Chapoutier Crozes-Hermitage", "$$$": "Domaine Chante Cigale Châteauneuf-du-Pape" } },
+                { name: "Barbera", region: "Piedmont, Italy", type: "Red", notes: "Bright and juicy with cherry, raspberry, and subtle spice. Low tannins, high acidity.", pairs: ["pizza", "pasta", "tomato", "vegetables", "salumi", "risotto"], vibe: ["rustic", "mediterranean", "festive"], priceRange: { "$": "~$12", "$$": "~$22", "$$$": "~$55" }, bottles: { "$": "Michele Chiarlo Barbera d'Asti", "$$": "Vietti Barbera d'Asti Tre Vigne", "$$$": "Braida Bricco dell'Uccellone" } },
+                { name: "Rioja", region: "Spain", type: "Red", notes: "Elegant with red fruit, vanilla, leather, and tobacco from American oak aging.", pairs: ["lamb", "pork", "tapas", "manchego", "paella"], vibe: ["classic", "elegant", "mediterranean"], priceRange: { "$": "~$12", "$$": "~$22", "$$$": "~$45" }, bottles: { "$": "Marqués de Cáceres Crianza", "$$": "La Rioja Alta Viña Alberdi Reserva", "$$$": "López de Heredia Viña Tondonia Reserva" } }
+            ],
+            white: [
+                { name: "Riesling", region: "Germany", type: "White", notes: "Aromatic with green apple, citrus, and petrol notes. Crisp acidity with mineral finish.", pairs: ["spicy", "asian", "thai", "indian", "seafood", "pork", "sushi"], vibe: ["garden", "modern", "elegant"], priceRange: { "$": "~$14", "$$": "~$22", "$$$": "~$49" }, bottles: { "$": "Dr. Loosen Blue Slate", "$$": "Carl Graff Riesling", "$$$": "Hofgut Falkenstein Riesling Kabinett" } },
+                { name: "Chablis", region: "Burgundy, France", type: "White", notes: "Lean and mineral-driven with citrus, green apple, and flinty notes. Unoaked elegance.", pairs: ["oysters", "shellfish", "seafood", "sushi", "goat cheese", "fish"], vibe: ["elegant", "classic", "beach"], priceRange: { "$": "~$18", "$$": "~$24", "$$$": "~$40" }, bottles: { "$": "William Fèvre Petit Chablis", "$$": "J. Moreau & Fils Les Petits Dieux", "$$$": "Jean-Marc Brocard V.V. 1946 Chablis" } },
+                { name: "Chenin Blanc", region: "Loire Valley, France", type: "White", notes: "Versatile with honey, apple, and floral notes. Balanced acidity with waxy texture.", pairs: ["poultry", "pork", "thai", "cheese", "fruit", "desserts"], vibe: ["garden", "elegant", "rustic"], priceRange: { "$": "~$12", "$$": "~$28", "$$$": "~$55" }, bottles: { "$": "Pine Ridge Chenin Blanc + Viognier", "$$": "Domaine Huet Vouvray Sec", "$$$": "Nicolas Joly Savennières" } },
+                { name: "Chardonnay", region: "Burgundy, France", type: "White", notes: "Rich and buttery with apple, citrus, and vanilla. Elegant oak integration.", pairs: ["lobster", "crab", "chicken", "cream", "butter", "risotto"], vibe: ["elegant", "classic", "modern"], priceRange: { "$": "~$14", "$$": "~$27", "$$$": "~$35" }, bottles: { "$": "Louis Latour Mâcon-Lugny", "$$": "Louis Latour Grand Ardèche", "$$$": "Château Vitallis Pouilly-Fuissé" } },
+                { name: "Sauvignon Blanc", region: "Marlborough, New Zealand", type: "White", notes: "Crisp and zesty with grapefruit, lime, and herbaceous notes. Refreshing acidity.", pairs: ["salad", "goat cheese", "seafood", "oysters", "fish", "sushi", "ceviche"], vibe: ["garden", "beach", "modern"], priceRange: { "$": "~$14", "$$": "~$28", "$$$": "~$40" }, bottles: { "$": "Kim Crawford Sauvignon Blanc", "$$": "Cloudy Bay Sauvignon Blanc", "$$$": "Dog Point Section 94" } },
+                { name: "Pinot Grigio", region: "Alto Adige, Italy", type: "White", notes: "Light and refreshing with pear, apple, and citrus. Clean and crisp finish.", pairs: ["appetizers", "salads", "fish", "shrimp", "pasta"], vibe: ["garden", "beach", "mediterranean"], priceRange: { "$": "~$20", "$$": "~$22", "$$$": "~$35" }, bottles: { "$": "Santa Margherita Pinot Grigio", "$$": "Alois Lageder Pinot Grigio", "$$$": "Elena Walch Castel Ringberg" } },
+                { name: "Albariño", region: "Rías Baixas, Spain", type: "White", notes: "Bright and mineral with citrus, stone fruit, and saline notes. Ocean influence.", pairs: ["seafood", "oysters", "shrimp", "fish", "tapas", "ceviche"], vibe: ["beach", "mediterranean", "modern"], priceRange: { "$": "~$12", "$$": "~$15", "$$$": "~$45" }, bottles: { "$": "Martín Códax Albariño", "$$": "Burgans Albariño", "$$$": "Pazo de Señorans Selección de Añada" } }
+            ],
+            rose: [
+                { name: "Provence Rosé", region: "Provence, France", type: "Rosé", notes: "Pale and elegant with strawberry, peach, and herbs. Dry and refreshing.", pairs: ["salads", "seafood", "light", "appetizers", "chicken", "mediterranean"], vibe: ["garden", "beach", "mediterranean", "elegant"], priceRange: { "$": "~$18", "$$": "~$22", "$$$": "~$68" }, bottles: { "$": "AIX Rosé", "$$": "Whispering Angel Rosé", "$$$": "Domaine Tempier Bandol" } }
+            ],
+            sparkling: [
+                { name: "California Sparkling", region: "California, USA", type: "Sparkling", notes: "Fresh and fruity with green apple, citrus, and toast. Fine persistent bubbles.", pairs: ["appetizers", "brunch", "celebrations", "oysters", "light"], vibe: ["modern", "festive", "elegant"], priceRange: { "$": "~$15", "$$": "~$25", "$$$": "~$40" }, bottles: { "$": "Gruet Brut", "$$": "Schramsberg Mirabelle Brut", "$$$": "Schramsberg Blanc de Blancs" } },
+                { name: "Rosé Bubbles", region: "Champagne, France", type: "Sparkling", notes: "Delicate pink with strawberry, raspberry, and brioche notes. Celebratory elegance.", pairs: ["celebrations", "brunch", "appetizers", "strawberries", "desserts"], vibe: ["romantic", "elegant", "festive"], priceRange: { "$": "~$12", "$$": "~$30", "$$$": "~$90" }, bottles: { "$": "Segura Viudas Brut Rosé", "$$": "Domaine Franck Besson Granit", "$$$": "Billecart-Salmon Brut Rosé" } },
+                { name: "Champagne", region: "Champagne, France", type: "Sparkling", notes: "Elegant bubbles with brioche, apple, and citrus. Toasty and complex.", pairs: ["oysters", "caviar", "appetizers", "celebrations", "seafood"], vibe: ["elegant", "classic", "modern", "festive"], priceRange: { "$": "~$35", "$$": "~$39", "$$$": "~$65" }, bottles: { "$": "Nicolas Feuillatte Brut", "$$": "Marcel Pierre Brut", "$$$": "Taittinger Brut Réserve" } },
+                { name: "Prosecco", region: "Italy", type: "Sparkling", notes: "Light and fruity with green apple, pear, and floral notes. Fresh and approachable.", pairs: ["appetizers", "brunch", "light", "celebrations", "aperitivo"], vibe: ["garden", "beach", "modern", "festive"], priceRange: { "$": "~$14", "$$": "~$18", "$$$": "~$25" }, bottles: { "$": "La Marca Prosecco", "$$": "Bisol Jeio Prosecco", "$$$": "Nino Franco Primo Franco" } },
+                { name: "Cava", region: "Spain", type: "Sparkling", notes: "Crisp and citrusy with apple and almond notes. Excellent value bubbles.", pairs: ["tapas", "appetizers", "seafood", "brunch", "celebrations"], vibe: ["mediterranean", "festive", "modern"], priceRange: { "$": "~$10", "$$": "~$18", "$$$": "~$35" }, bottles: { "$": "Freixenet Cordon Negro", "$$": "Segura Viudas Reserva Heredad", "$$$": "Gramona Imperial" } }
+            ]
+        };
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        function showScreen(screenName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.screen === screenName);
+            });
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.toggle('active', screen.id === `screen-${screenName}`);
+            });
+            if (screenName === 'admin') updateQuantityCalc();
+        }
+
+        // ============================================
+        // RESTAURANT MODE
+        // ============================================
+        let selectedBudget = '$';
+
+        function selectBudget(chip) {
+            document.querySelectorAll('[data-budget]').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            selectedBudget = chip.dataset.budget;
+        }
+
+        function getWinePairings() {
+            const dish = document.getElementById('dish-input').value.toLowerCase().trim();
+            if (!dish) { alert('Please enter a dish first!'); return; }
+
+            const resultsContainer = document.getElementById('restaurant-results');
+            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            setTimeout(() => {
+                const matches = findWineMatches(dish, selectedBudget);
+                displayRestaurantResults(matches, dish);
+            }, 600);
+        }
+
+        function findWineMatches(dish, budget) {
+            const allWines = [...wineDatabase.red, ...wineDatabase.white, ...wineDatabase.rose, ...wineDatabase.sparkling];
+            const matches = [];
+
+            allWines.forEach(wine => {
+                let score = 0;
+                wine.pairs.forEach(keyword => { if (dish.includes(keyword)) score += 10; });
+                if (score > 0) matches.push({ ...wine, score, budget });
+            });
+
+            matches.sort((a, b) => b.score - a.score);
+            
+            if (matches.length === 0) {
+                return [
+                    { ...wineDatabase.white[0], budget, fallback: true },
+                    { ...wineDatabase.red[1], budget, fallback: true },
+                    { ...wineDatabase.sparkling[1], budget, fallback: true }
+                ];
+            }
+            return matches.slice(0, 3);
+        }
+
+        function displayRestaurantResults(matches, dish) {
+            const container = document.getElementById('restaurant-results');
+            let html = `<h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; margin-bottom: 1rem;">${matches[0]?.fallback ? `Sommelier's Picks for "${dish}"` : `Perfect Pairings for "${dish}"`}</h3>`;
+
+            matches.forEach(wine => {
+                const typeClass = wine.type.toLowerCase().replace(' ', '-') + '-wine';
+                html += `
+                    <div class="wine-card ${typeClass}">
+                        <div class="wine-header">
+                            <h4 class="wine-name">${wine.name}</h4>
+                            <span class="wine-type">${wine.type}</span>
+                        </div>
+                        <p class="wine-region">${wine.region}</p>
+                        <p class="wine-notes">${wine.notes}</p>
+                        <div class="wine-price">
+                            <span class="price-badge">${selectedBudget} ${wine.priceRange[selectedBudget]}</span>
+                            <span style="color: var(--text-light);">•</span>
+                            <span style="color: var(--text-secondary); font-size: 0.875rem;">${wine.bottles[selectedBudget]}</span>
+                        </div>
+                    </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // ============================================
+        // WEDDING MODE
+        // ============================================
+        let selectedVibes = [];
+
+        function selectVibe(chip) {
+            chip.classList.toggle('selected');
+            const vibe = chip.dataset.vibe;
+            if (selectedVibes.includes(vibe)) {
+                selectedVibes = selectedVibes.filter(v => v !== vibe);
+            } else {
+                selectedVibes.push(vibe);
+            }
+        }
+
+        function generateWeddingPreview() {
+            const name = document.getElementById('wedding-name').value;
+            const guests = document.getElementById('wedding-guests').value;
+            const budget = document.getElementById('wedding-budget').value;
+
+            if (!name || !guests || !budget) {
+                alert('Please fill in your name, guest count, and budget!');
+                return;
+            }
+
+            const container = document.getElementById('wedding-results');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            setTimeout(() => {
+                const guestCount = parseInt(guests);
+                const sparklingBottles = Math.ceil(guestCount / 16);
+                
+                container.innerHTML = `
+                    <div style="margin-top: 1.5rem;">
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 0.5rem;">${name}'s Wedding Wine Preview</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Based on ${guests} guests • Budget: ${budget.replace('-', ' - $')}</p>
+                    </div>
+                    <div class="wine-card sparkling-wine">
+                        <div class="wine-header">
+                            <h4 class="wine-name">Prosecco</h4>
+                            <span class="wine-type">Toast</span>
+                        </div>
+                        <p class="wine-region">Veneto, Italy</p>
+                        <p class="wine-notes">Light and festive with green apple and floral notes.</p>
+                        <p class="wine-pairing-reason">For the toast: ${sparklingBottles} bottles recommended</p>
+                    </div>
+                    <div class="locked-section">
+                        <div class="locked-content">
+                            <div class="wine-card" style="margin-bottom: 0.5rem;"><div class="wine-header"><h4 class="wine-name">Recommended White Wine</h4></div></div>
+                            <div class="wine-card" style="margin-bottom: 0.5rem;"><div class="wine-header"><h4 class="wine-name">Recommended Red Wine</h4></div></div>
+                            <div class="wine-card"><div class="wine-header"><h4 class="wine-name">Recommended Rosé</h4></div></div>
+                        </div>
+                        <div class="locked-overlay">
+                            <div class="locked-icon">🔒</div>
+                            <h4 class="locked-title">See Your Full Guide</h4>
+                            <p class="locked-text">Get all wine recommendations, quantities, and where to buy.</p>
+                            <a href="#cta" class="btn btn-primary" style="width: auto;">Unlock Full Guide</a>
+                        </div>
+                    </div>
+                    <div class="cta-section" id="cta">
+                        <h3 class="cta-title">Get Your Complete Wedding Wine Guide</h3>
+                        <p class="cta-text">Expert recommendations tailored to your venue, menu, and guests.</p>
+                        <div class="cta-price">$199</div>
+                        <p class="cta-price-note">One-time consultation fee</p>
+                        <a href="https://calendly.com" target="_blank" class="btn btn-cta">Book Your Consultation</a>
+                        <div class="cta-features">
+                            <div class="cta-feature">30-minute video call with WSET-certified sommelier</div>
+                            <div class="cta-feature">Personalized wine guide PDF</div>
+                            <div class="cta-feature">Exact quantities for your guest count</div>
+                            <div class="cta-feature">Where to buy locally</div>
+                        </div>
+                    </div>`;
+            }, 800);
+        }
+
+        // ============================================
+        // ADMIN - CALCULATIONS
+        // ============================================
+        function calculateWineQuantities(guests, hours, barType, drinkingLevel, includeRose, redWhiteBalance, sparklingUsage) {
+            const POURS_PER_BOTTLE = 5;
+            const TOAST_POURS_PER_BOTTLE = 8;
+            
+            // Glasses per person (not including toast) based on drinking level
+            let glassesPerPerson;
+            if (drinkingLevel === 'light') glassesPerPerson = 0.5;
+            else if (drinkingLevel === 'heavy') glassesPerPerson = 2.5; // middle of 2-3
+            else glassesPerPerson = 1.5; // moderate: middle of 1-2
+            
+            // Wine percentage based on bar type
+            let winePercentage;
+            switch (barType) {
+                case 'wine-focus': winePercentage = 0.90; break;
+                case 'wine-beer': winePercentage = 0.60; break;
+                case 'toast-only': winePercentage = 0.0; break; // no table wine for toast-only
+                default: winePercentage = 0.40; // mixed bar
+            }
+            
+            // Calculate table wine bottles
+            const tableWineServings = guests * glassesPerPerson * winePercentage;
+            const tableWineBottles = Math.ceil(tableWineServings / POURS_PER_BOTTLE);
+            
+            // Calculate sparkling based on usage
+            let sparklingBottles = 0;
+            if (sparklingUsage === 'toast-only' || sparklingUsage === 'toast-and-bar') {
+                // Toast: 1 pour per guest at 8 pours/bottle
+                sparklingBottles = Math.ceil(guests / TOAST_POURS_PER_BOTTLE);
+            }
+            if (sparklingUsage === 'toast-and-bar') {
+                // Add extra for bar service (roughly 0.5 glasses per person who wants it)
+                sparklingBottles += Math.ceil((guests * 0.3 * 0.5) / POURS_PER_BOTTLE);
+            }
+            if (sparklingUsage === 'no-toast') {
+                // Just bar service, treat like other wines
+                sparklingBottles = Math.ceil((guests * 0.2 * glassesPerPerson) / POURS_PER_BOTTLE);
+            }
+            
+            // Red/white split based on preference
+            let redPct, whitePct;
+            switch (redWhiteBalance) {
+                case 'more-red': redPct = 0.60; whitePct = 0.40; break;
+                case 'more-white': redPct = 0.40; whitePct = 0.60; break;
+                case 'heavy-red': redPct = 0.75; whitePct = 0.25; break;
+                case 'heavy-white': redPct = 0.25; whitePct = 0.75; break;
+                default: redPct = 0.50; whitePct = 0.50; // balanced
+            }
+            
+            // If including rosé, take 15% from the split
+            let rosePct = 0;
+            if (includeRose === 'yes') {
+                rosePct = 0.15;
+                redPct = redPct * 0.85;
+                whitePct = whitePct * 0.85;
+            }
+            
+            const redBottles = Math.ceil(tableWineBottles * redPct);
+            const whiteBottles = Math.ceil(tableWineBottles * whitePct);
+            const roseBottles = includeRose === 'yes' ? Math.max(1, Math.ceil(tableWineBottles * rosePct)) : 0;
+            
+            return {
+                sparklingBottles: Math.max(sparklingUsage === 'no-toast' ? 0 : 1, sparklingBottles),
+                redBottles: Math.max(barType === 'toast-only' ? 0 : 1, redBottles),
+                whiteBottles: Math.max(barType === 'toast-only' ? 0 : 1, whiteBottles),
+                roseBottles,
+                totalBottles: sparklingBottles + redBottles + whiteBottles + roseBottles
+            };
+        }
+
+        function getBarTypeLabel(barType) {
+            const labels = { 'wine-focus': 'Wine-Focused', 'mixed': 'Mixed Bar', 'wine-beer': 'Wine & Beer', 'toast-only': 'Toast + Limited' };
+            return labels[barType] || 'Mixed Bar';
+        }
+
+        function updateQuantityCalc() {
+            const guests = parseInt(document.getElementById('pdf-guests')?.value) || 0;
+            const hours = parseInt(document.getElementById('pdf-hours')?.value) || 5;
+            const budget = parseFloat(document.getElementById('pdf-budget')?.value) || 0;
+            const barType = document.getElementById('pdf-bar-type')?.value || 'mixed';
+            const drinkingLevel = document.getElementById('pdf-drinking-level')?.value || 'moderate';
+            const includeRose = document.getElementById('pdf-include-rose')?.value || 'yes';
+            const redWhiteBalance = document.getElementById('pdf-red-white-balance')?.value || 'balanced';
+            const sparklingUsage = document.getElementById('pdf-sparkling-usage')?.value || 'toast-only';
+
+            if (guests === 0) {
+                document.getElementById('calc-results').innerHTML = '<p style="color: var(--text-secondary); font-size: 0.875rem;">Enter guest count above to calculate.</p>';
+                return;
+            }
+
+            const calc = calculateWineQuantities(guests, hours, barType, drinkingLevel, includeRose, redWhiteBalance, sparklingUsage);
+            const avgPrice = budget > 0 ? (budget / Math.max(1, calc.totalBottles)).toFixed(2) : '—';
+
+            let roseRow = includeRose === 'yes' ? `<div class="calc-row"><span class="calc-label">Rosé</span><span class="calc-value">${calc.roseBottles}</span></div>` : '';
+            
+            document.getElementById('calc-results').innerHTML = `
+                <div class="calc-row"><span class="calc-label">Total Bottles</span><span class="calc-value">${calc.totalBottles}</span></div>
+                <div class="calc-row"><span class="calc-label">Sparkling</span><span class="calc-value">${calc.sparklingBottles}</span></div>
+                <div class="calc-row"><span class="calc-label">Red Wine</span><span class="calc-value">${calc.redBottles}</span></div>
+                <div class="calc-row"><span class="calc-label">White Wine</span><span class="calc-value">${calc.whiteBottles}</span></div>
+                ${roseRow}
+                <div class="calc-row"><span class="calc-label">Avg. Price/Bottle</span><span class="calc-value">$${avgPrice}</span></div>
+                <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-light);">${getBarTypeLabel(barType)}, ${drinkingLevel} drinkers</div>`;
+        }
+
+        // ============================================
+        // NARRATIVE GENERATION
+        // ============================================
+        function expandVision(vibe, venueType, venueName) {
+            const vibeLower = vibe.toLowerCase();
+            const venueDescriptions = {
+                'ballroom': 'the grandeur of a ballroom setting',
+                'outdoor': 'the natural beauty of an outdoor celebration',
+                'vineyard': 'the romantic ambiance of a vineyard',
+                'beach': 'the relaxed elegance of a waterfront setting',
+                'rustic': 'the warm, intimate charm of a rustic venue',
+                'modern': 'the sleek sophistication of a contemporary space'
+            };
+
+            const vibeExpansions = {
+                'elegant': 'refined sophistication with timeless appeal—wines that command attention without demanding it',
+                'coastal': 'sun-kissed ease meets seaside romance—bright, refreshing wines that echo the salt air',
+                'chic': 'curated style with an effortless edge—wines that are conversation starters',
+                'mediterranean': 'Old World warmth and sun-drenched flavors—wines that transport guests to coastal Italy',
+                'rustic': 'heartfelt charm and approachable luxury—wines that feel like a warm embrace',
+                'modern': 'clean lines and bold statements—contemporary yet classic wines',
+                'garden': 'botanical beauty and fresh-air romance—light, aromatic wines',
+                'romantic': 'intimate moments and heartfelt connections—wines with soft edges',
+                'classic': 'timeless traditions honored beautifully—wines with pedigree and polish',
+                'glamorous': 'unapologetic luxury and sparkling moments'
+            };
+
+            let narrative = `You've described your vision as "${vibe}." `;
+            let expandedVibe = '';
+            for (const [key, expansion] of Object.entries(vibeExpansions)) {
+                if (vibeLower.includes(key)) { expandedVibe = expansion; break; }
+            }
+            
+            if (expandedVibe) narrative += `We interpret this as ${expandedVibe}. `;
+            else narrative += `We love this direction and have selected wines that embody this aesthetic. `;
+
+            const venueDesc = venueDescriptions[venueType] || 'your chosen venue';
+            narrative += `Combined with ${venueDesc} at ${venueName}, we've curated wines that feel intentional and cohesive.`;
+            return narrative;
+        }
+
+        function synthesizePersonalization(preferences, notes, names) {
+            if (!preferences && !notes) return '';
+            const prefLower = (preferences + ' ' + notes).toLowerCase();
+            let narrative = '';
+            
+            if (prefLower.includes('italy') || prefLower.includes('italian')) narrative += 'We\'ve honored the Italian heritage with wines from the old country. ';
+            if (prefLower.includes('south africa')) narrative += 'With connections to South Africa\'s wine country, we\'ve selected bolder, sun-drenched options. ';
+            if (prefLower.includes('upbeat') || prefLower.includes('fun')) narrative += 'The celebratory atmosphere calls for approachable, crowd-pleasing wines. ';
+            if (prefLower.includes('classy') || prefLower.includes('elegant')) narrative += 'For refined elegance, we\'ve chosen wines with polish and pedigree. ';
+            if (prefLower.includes('rosé') || prefLower.includes('rose')) narrative += 'The love for rosé has been thoughtfully incorporated. ';
+            if (prefLower.includes('bold')) narrative += 'For those who love bold wines, we\'ve included options with depth. ';
+            if (prefLower.includes('no oak') || prefLower.includes('unoaked')) narrative += 'We\'ve steered clear of heavily oaked styles. ';
+            
+            if (!narrative) narrative = `Every detail shared has informed these selections for ${names}.`;
+            return narrative.trim();
+        }
+
+        function getWineNarrative(category, wineName) {
+            const narratives = {
+                'Sparkling': {
+                    'Champagne': 'Nothing announces celebration quite like Champagne. Fine bubbles and toasty complexity make the toast memorable.',
+                    'Prosecco': 'Light and irresistibly cheerful—Prosecco sets a festive tone without taking itself too seriously.',
+                    'Cava': 'Spain\'s answer to Champagne offers remarkable elegance at a friendlier price point.'
+                },
+                'White': {
+                    'Chardonnay': 'A crowd-pleaser that balances richness with freshness—versatile for diverse palates.',
+                    'Sauvignon Blanc': 'Crisp, refreshing, and utterly food-friendly. Guests reach for this all evening.',
+                    'Pinot Grigio': 'Clean and approachable—the definition of easy-drinking elegance.',
+                    'Albariño': 'Mineral-driven freshness with subtle salinity. Incredibly food-friendly.'
+                },
+                'Red': {
+                    'Cabernet Sauvignon': 'The classic choice—structured and sophisticated, universally respected.',
+                    'Pinot Noir': 'Elegant and versatile, bridging red and white wine drinkers beautifully.',
+                    'Malbec': 'Plush, friendly, and crowd-pleasing with smooth tannins.',
+                    'Sangiovese': 'Italy\'s noble grape—bright cherry fruit made for food and celebration.'
+                },
+                'Rosé': {
+                    'Provence Rosé': 'The gold standard—pale, elegant, impossibly refreshing. Tastes even better than it looks.'
+                }
+            };
+            return narratives[category]?.[wineName] || 'A thoughtfully selected wine to complement your celebration.';
+        }
+
+        function getWhereToBuy(location) {
+            const locationLower = location.toLowerCase();
+            const stores = [
+                { name: 'Total Wine & More', address: 'Multiple locations', url: 'https://www.totalwine.com/store-finder', note: 'Best selection, 10-15% case discounts' },
+                { name: 'Costco', address: 'Membership required', url: 'https://www.costco.com/warehouse-locations', note: 'Exceptional value, Kirkland wines are gems' },
+                { name: 'Wine.com', address: 'Online with delivery', url: 'https://www.wine.com', note: 'Wide selection, easy ordering' }
+            ];
+
+            if (locationLower.includes('st. pete') || locationLower.includes('tampa')) {
+                stores.unshift({ name: 'Fortunato Wine', address: '251 2nd Ave N, St. Petersburg, FL', url: 'https://fortunatowine.com', note: 'Local favorite, knowledgeable staff' });
+            }
+            return stores;
+        }
+
+        function getVibeBasedRecommendations(vibe, food, avgPrice, notes) {
+            let tier = avgPrice >= 25 ? '$$$' : avgPrice >= 15 ? '$$' : '$';
+            const searchText = ((vibe || '') + ' ' + (notes || '') + ' ' + (food || '')).toLowerCase();
+            
+            // Log for debugging
+            console.log('Recommendation search text:', searchText);
+            console.log('Notes received:', notes);
+
+            // Helper to extract price number from format like "~$75"
+            function extractPrice(priceStr) {
+                return priceStr.replace(/[~$]/g, '').split('-')[0].trim();
+            }
+
+            // Helper to find wine by name
+            function findWine(array, name) {
+                return array.find(w => w.name === name);
+            }
+
+            // Defaults
+            let sparkling = findWine(wineDatabase.sparkling, 'Champagne');
+            let white = findWine(wineDatabase.white, 'Chardonnay');
+            let red = findWine(wineDatabase.red, 'Cabernet Sauvignon');
+            let rose = wineDatabase.rose[0];
+
+            // RED WINE MATCHING - check notes first, most specific matches first
+            if (searchText.match(/italian|italy|tuscan|chianti|sangiovese/)) {
+                console.log('Matched: Italian red');
+                red = findWine(wineDatabase.red, 'Sangiovese');
+            } else if (searchText.match(/barbera|piedmont/)) {
+                console.log('Matched: Barbera');
+                red = findWine(wineDatabase.red, 'Barbera');
+            } else if (searchText.match(/rioja|spanish red|spain red/)) {
+                console.log('Matched: Rioja');
+                red = findWine(wineDatabase.red, 'Rioja');
+            } else if (searchText.match(/burgundy|bourgogne|french pinot/)) {
+                console.log('Matched: Burgundy Pinot');
+                red = wineDatabase.red.find(w => w.region && w.region.includes('Burgundy'));
+            } else if (searchText.match(/oregon|willamette/)) {
+                console.log('Matched: Oregon Pinot');
+                red = wineDatabase.red.find(w => w.region && w.region.includes('Willamette'));
+            } else if (searchText.match(/pinot noir|pinot/)) {
+                console.log('Matched: Pinot Noir (default Willamette)');
+                red = wineDatabase.red.find(w => w.region && w.region.includes('Willamette'));
+            } else if (searchText.match(/rhone|syrah|shiraz/)) {
+                console.log('Matched: Syrah');
+                red = findWine(wineDatabase.red, 'Syrah / Shiraz');
+            } else if (searchText.match(/argentin|malbec|mendoza/)) {
+                console.log('Matched: Malbec');
+                red = findWine(wineDatabase.red, 'Malbec');
+            } else if (searchText.match(/napa|cabernet/)) {
+                console.log('Matched: Napa Cab');
+                red = findWine(wineDatabase.red, 'Cabernet Sauvignon');
+            }
+
+            // WHITE WINE MATCHING
+            if (searchText.match(/riesling|german white/)) {
+                white = findWine(wineDatabase.white, 'Riesling');
+            } else if (searchText.match(/chablis|unoaked/)) {
+                white = findWine(wineDatabase.white, 'Chablis');
+            } else if (searchText.match(/chenin|loire/)) {
+                white = findWine(wineDatabase.white, 'Chenin Blanc');
+            } else if (searchText.match(/sauvignon blanc|new zealand|marlborough/)) {
+                white = findWine(wineDatabase.white, 'Sauvignon Blanc');
+            } else if (searchText.match(/pinot grigio|italian white/)) {
+                white = findWine(wineDatabase.white, 'Pinot Grigio');
+            } else if (searchText.match(/albariño|albarino|spanish white/)) {
+                white = findWine(wineDatabase.white, 'Albariño');
+            }
+
+            // SPARKLING MATCHING
+            if (searchText.match(/prosecco/)) {
+                sparkling = findWine(wineDatabase.sparkling, 'Prosecco');
+            } else if (searchText.match(/cava|spanish sparkling/)) {
+                sparkling = findWine(wineDatabase.sparkling, 'Cava');
+            } else if (searchText.match(/california sparkling|domestic/)) {
+                sparkling = findWine(wineDatabase.sparkling, 'California Sparkling');
+            } else if (searchText.match(/rosé sparkling|pink bubbles|rosé bubbles/)) {
+                sparkling = findWine(wineDatabase.sparkling, 'Rosé Bubbles');
+            }
+
+            // Fallback safety
+            if (!red) red = wineDatabase.red[0];
+            if (!white) white = wineDatabase.white[0];
+            if (!sparkling) sparkling = wineDatabase.sparkling[0];
+            if (!rose) rose = wineDatabase.rose[0];
+
+            console.log('Selected red:', red.name);
+            console.log('Selected white:', white.name);
+
+            return [
+                { category: 'Sparkling', name: sparkling.name, region: sparkling.region, bottle: sparkling.bottles[tier], price: extractPrice(sparkling.priceRange[tier]) },
+                { category: 'White', name: white.name, region: white.region, bottle: white.bottles[tier], price: extractPrice(white.priceRange[tier]) },
+                { category: 'Red', name: red.name, region: red.region, bottle: red.bottles[tier], price: extractPrice(red.priceRange[tier]) },
+                { category: 'Rosé', name: rose.name, region: rose.region, bottle: rose.bottles[tier], price: extractPrice(rose.priceRange[tier]) }
+            ];
+        }
+
+        // ============================================
+        // PREVIEW MODAL
+        // ============================================
+        let previewData = {};
+
+        function previewPDF() {
+            try {
+                const data = gatherFormData();
+                const calc = calculateWineQuantities(data.guests, data.hours, data.barType, data.drinkingLevel, data.includeRose, data.redWhiteBalance, data.sparklingUsage);
+                const avgPrice = (data.budget / Math.max(1, calc.totalBottles)).toFixed(2);
+                const recommendations = getVibeBasedRecommendations(data.vibe, data.food, avgPrice, data.notes);
+
+                previewData = { data, calc, avgPrice, recommendations };
+
+                document.getElementById('preview-vision').value = expandVision(data.vibe, data.venueType, data.venue);
+                document.getElementById('preview-personalization').value = synthesizePersonalization(data.preferences, data.notes, data.names);
+                document.getElementById('preview-sparkling').value = getWineNarrative('Sparkling', recommendations[0].name);
+                document.getElementById('preview-white').value = getWineNarrative('White', recommendations[1].name);
+                document.getElementById('preview-red').value = getWineNarrative('Red', recommendations[2].name);
+                document.getElementById('preview-rose').value = getWineNarrative('Rosé', recommendations[3].name);
+
+                document.getElementById('preview-modal').classList.add('active');
+            } catch (error) {
+                document.getElementById('pdf-status').innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
+            }
+        }
+
+        function closePreviewModal() {
+            document.getElementById('preview-modal').classList.remove('active');
+        }
+
+        function gatherFormData() {
+            return {
+                names: document.getElementById('pdf-names').value || 'Client',
+                date: document.getElementById('pdf-date').value,
+                venue: document.getElementById('pdf-venue').value || 'Wedding Venue',
+                venueType: document.getElementById('pdf-venue-type').value,
+                guests: parseInt(document.getElementById('pdf-guests').value) || 100,
+                hours: parseInt(document.getElementById('pdf-hours').value) || 5,
+                budget: parseFloat(document.getElementById('pdf-budget').value) || 2000,
+                location: document.getElementById('pdf-location').value || 'Your City',
+                vibe: document.getElementById('pdf-vibe').value || 'Elegant celebration',
+                food: document.getElementById('pdf-food').value || 'Wedding dinner',
+                preferences: document.getElementById('pdf-preferences').value || '',
+                notes: document.getElementById('pdf-notes').value || '',
+                barType: document.getElementById('pdf-bar-type').value || 'mixed',
+                drinkingLevel: document.getElementById('pdf-drinking-level').value || 'moderate',
+                includeRose: document.getElementById('pdf-include-rose').value || 'yes',
+                redWhiteBalance: document.getElementById('pdf-red-white-balance').value || 'balanced',
+                sparklingUsage: document.getElementById('pdf-sparkling-usage').value || 'toast-only'
+            };
+        }
+
+        // ============================================
+        // PDF GENERATION
+        // ============================================
+        function generatePDFFromPreview() {
+            const editedVision = document.getElementById('preview-vision').value;
+            const editedPersonalization = document.getElementById('preview-personalization').value;
+            const editedNarratives = {
+                sparkling: document.getElementById('preview-sparkling').value,
+                white: document.getElementById('preview-white').value,
+                red: document.getElementById('preview-red').value,
+                rose: document.getElementById('preview-rose').value
+            };
+            closePreviewModal();
+            buildPDF(previewData.data, previewData.calc, previewData.avgPrice, previewData.recommendations, editedVision, editedPersonalization, editedNarratives);
+        }
+
+        function generatePDF() {
+            try {
+                const data = gatherFormData();
+                const calc = calculateWineQuantities(data.guests, data.hours, data.barType, data.drinkingLevel, data.includeRose, data.redWhiteBalance, data.sparklingUsage);
+                const avgPrice = (data.budget / Math.max(1, calc.totalBottles)).toFixed(2);
+                const recommendations = getVibeBasedRecommendations(data.vibe, data.food, avgPrice, data.notes);
+
+                const vision = expandVision(data.vibe, data.venueType, data.venue);
+                const personalization = synthesizePersonalization(data.preferences, data.notes, data.names);
+                const narratives = {
+                    sparkling: getWineNarrative('Sparkling', recommendations[0].name),
+                    white: getWineNarrative('White', recommendations[1].name),
+                    red: getWineNarrative('Red', recommendations[2].name),
+                    rose: getWineNarrative('Rosé', recommendations[3].name)
+                };
+
+                buildPDF(data, calc, avgPrice, recommendations, vision, personalization, narratives);
+            } catch (error) {
+                document.getElementById('pdf-status').innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
+            }
+        }
+
+        function buildPDF(data, calc, avgPrice, recommendations, vision, personalization, narratives) {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // PAGE 1: COVER
+                doc.setFillColor(114, 47, 55); // burgundy
+                doc.rect(0, 0, 210, 297, 'F');
+                
+                doc.setDrawColor(201, 162, 39); // gold
+                doc.setLineWidth(0.5);
+                doc.line(20, 20, 190, 20);
+
+                doc.setTextColor(255, 255, 255); // white
+                doc.setFontSize(32);
+                doc.setFont('helvetica', 'bold');
+                doc.text('WEDDING WINE GUIDE', 105, 120, { align: 'center' });
+
+                doc.setDrawColor(201, 162, 39);
+                doc.line(70, 130, 140, 130);
+
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'normal');
+                doc.text('Curated for ' + data.names, 105, 150, { align: 'center' });
+
+                const formattedDate = data.date ? new Date(data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+                if (formattedDate) {
+                    doc.setFontSize(12);
+                    doc.text(formattedDate, 105, 165, { align: 'center' });
+                }
+                doc.text(data.venue, 105, 180, { align: 'center' });
+
+                doc.setFontSize(10);
+                doc.setTextColor(201, 162, 39); // gold
+                doc.text('CELLARSENSE.AI', 105, 270, { align: 'center' });
+
+                // PAGE 2: VISION & QUANTITIES
+                doc.addPage();
+                var y = 30;
+
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(114, 47, 55); // burgundy
+                doc.text('YOUR VISION', 20, y);
+                y += 10;
+
+                doc.setFillColor(250, 247, 244); // cream
+                doc.rect(15, y, 180, 50, 'F');
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'italic');
+                doc.setTextColor(26, 26, 46); // darkText
+                var visionLines = doc.splitTextToSize(vision, 170);
+                doc.text(visionLines, 20, y + 10);
+                y += 60;
+
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(114, 47, 55);
+                doc.text('WINE QUANTITIES', 20, y);
+                y += 10;
+
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(90, 90, 110); // grayText
+                doc.text('For ' + data.guests + ' guests over ' + data.hours + ' hours (' + getBarTypeLabel(data.barType) + '):', 20, y);
+                y += 10;
+
+                // Quantities list
+                doc.setTextColor(90, 90, 110);
+                doc.text('Sparkling (Toast)', 25, y);
+                doc.text(calc.sparklingBottles + ' bottles', 100, y);
+                y += 7;
+
+                doc.text('White Wine', 25, y);
+                doc.text(calc.whiteBottles + ' bottles', 100, y);
+                y += 7;
+
+                doc.text('Red Wine', 25, y);
+                doc.text(calc.redBottles + ' bottles', 100, y);
+                y += 7;
+
+                doc.text('Rosé', 25, y);
+                doc.text(calc.roseBottles + ' bottles', 100, y);
+                y += 7;
+
+                doc.setTextColor(114, 47, 55);
+                doc.setFont('helvetica', 'bold');
+                doc.text('TOTAL', 25, y);
+                doc.text(calc.totalBottles + ' bottles', 100, y);
+                y += 10;
+
+                doc.setTextColor(26, 26, 46);
+                doc.setFont('helvetica', 'normal');
+                doc.text('Budget: $' + data.budget.toLocaleString() + ' (~$' + avgPrice + '/bottle)', 20, y);
+
+                // PAGE 3: RECOMMENDATIONS
+                doc.addPage();
+                y = 30;
+
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(114, 47, 55);
+                doc.text('OUR RECOMMENDATIONS', 20, y);
+                y += 15;
+
+                var wineNarratives = [narratives.sparkling, narratives.white, narratives.red, narratives.rose];
+                
+                for (var i = 0; i < recommendations.length; i++) {
+                    var wine = recommendations[i];
+                    
+                    doc.setFillColor(250, 247, 244);
+                    doc.rect(15, y, 180, 40, 'F');
+                    
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(114, 47, 55);
+                    doc.text(wine.category.toUpperCase(), 20, y + 8);
+                    
+                    doc.setFontSize(11);
+                    doc.setTextColor(26, 26, 46);
+                    doc.text(wine.name + ' — ' + wine.region, 20, y + 16);
+                    
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(90, 90, 110);
+                    var wineNarrative = doc.splitTextToSize(wineNarratives[i], 140);
+                    doc.text(wineNarrative.slice(0, 2), 20, y + 24);
+                    
+                    doc.setTextColor(26, 26, 46);
+                    doc.text('Our pick: ' + wine.bottle + ' (~$' + wine.price + ')', 20, y + 35);
+                    
+                    y += 48;
+                }
+
+                // PAGE 4: PERSONALIZATION & WHERE TO BUY
+                doc.addPage();
+                y = 30;
+
+                if (personalization && personalization.length > 0) {
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(114, 47, 55);
+                    doc.text('TAILORED FOR YOU', 20, y);
+                    y += 10;
+
+                    doc.setFillColor(250, 247, 244);
+                    doc.rect(15, y, 180, 35, 'F');
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'italic');
+                    doc.setTextColor(26, 26, 46);
+                    var persLines = doc.splitTextToSize(personalization, 170);
+                    doc.text(persLines, 20, y + 10);
+                    y += 50;
+                }
+
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(114, 47, 55);
+                doc.text('WHERE TO BUY', 20, y);
+                y += 10;
+
+                var stores = getWhereToBuy(data.location);
+                for (var j = 0; j < stores.length; j++) {
+                    var store = stores[j];
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(26, 26, 46);
+                    doc.text(store.name, 20, y);
+                    y += 5;
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(90, 90, 110);
+                    doc.text(store.address, 20, y);
+                    y += 5;
+                    doc.setTextColor(114, 47, 55);
+                    doc.text(store.url, 20, y);
+                    y += 4;
+                    doc.setTextColor(90, 90, 110);
+                    doc.text(store.note, 20, y);
+                    y += 10;
+                }
+
+                // PRO TIPS
+                y += 5;
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(114, 47, 55);
+                doc.text('PRO TIPS', 20, y);
+                y += 10;
+
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(90, 90, 110);
+                doc.text('• Order 10-15% extra for spillage and enthusiastic guests.', 20, y);
+                y += 6;
+                doc.text('• Most retailers accept returns on unopened bottles.', 20, y);
+                y += 6;
+                doc.text('• Chill whites and rosé 2-3 hours before; reds 15-20 minutes.', 20, y);
+                y += 6;
+                doc.text('• Plan for 1 bartender per 50 guests.', 20, y);
+
+                // Footer
+                doc.setFillColor(114, 47, 55);
+                doc.rect(0, 280, 210, 17, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(9);
+                doc.text('CellarSense.ai | anthony@cellarsense.ai', 105, 290, { align: 'center' });
+
+                // Save
+                var filename = data.names.replace(/[^a-z0-9]/gi, '_') + '_Wine_Guide.pdf';
+                doc.save(filename);
+
+                document.getElementById('pdf-status').innerHTML = '<div class="success-message">✓ PDF generated! Check downloads.</div>';
+                setTimeout(function() { document.getElementById('pdf-status').innerHTML = ''; }, 5000);
+            } catch (error) {
+                document.getElementById('pdf-status').innerHTML = '<div class="error-message">PDF Error: ' + error.message + '</div>';
+                console.error('PDF Generation Error:', error);
+            }
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            showScreen('restaurant');
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('admin') === 'true') {
+                document.getElementById('admin-tab').style.display = 'block';
+            }
+
+            ['pdf-guests', 'pdf-hours', 'pdf-budget', 'pdf-bar-type', 'pdf-drinking-level', 'pdf-include-rose', 'pdf-red-white-balance', 'pdf-sparkling-usage'].forEach(id => {
+                const el = document.getElementById
