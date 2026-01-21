@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CellarSense | Wedding Wine Consultation</title>
+    <meta name="description" content="Expert wedding wine consultation by a WSET-certified sommelier. Get a personalized 8-page wine guide tailored to your celebration.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --burgundy: #722F37;
+            --burgundy-dark: #5a252c;
+            --gold: #C9A962;
+            --gold-light: #d4b978;
+            --cream: #FAF8F5;
+            --cream-dark: #EDE8E0;
+            --text-dark: #2D2D2D;
+            --text-medium: #5A5A5A;
+            --text-light: #8A8A8A;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--cream);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--burgundy);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-medium);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--burgundy);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--burgundy);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--burgundy-dark);
+        }
+
+        .btn-secondary {
+            background: var(--gold);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gold-light);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--burgundy);
+            color: var(--burgundy);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--burgundy);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            background: linear-gradient(135deg, var(--burgundy) 0%, #8b3d47 100%);
+            color: white;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(201, 169, 98, 0.2);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero .btn-primary {
+            background: var(--gold);
+            color: var(--text-dark);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .hero .btn-primary:hover {
+            background: var(--gold-light);
+        }
+
+        .hero .btn-outline {
+            border-color: white;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .hero .btn-outline:hover {
+            background: white;
+            color: var(--burgundy);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--burgundy);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .gold-line {
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+            margin: 1.5rem auto;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: white;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--cream);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--burgundy);
+        }
+
+        .step h3 {
+            font-size: 1.4rem;
+            color: var(--burgundy);
+            margin-bottom: 0.75rem;
+        }
+
+        .step p {
+            color: var(--text-medium);
+            font-size: 1rem;
+        }
+
+        /* What's Included */
+        .whats-included {
+            background: var(--cream);
+        }
+
+        .included-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .included-item {
+            background: white;
+            padding: 1.75rem;
+            border-radius: 12px;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .included-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--cream);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.25rem;
+        }
+
+        .included-item h4 {
+            font-size: 1.1rem;
+            color: var(--burgundy);
+            margin-bottom: 0.35rem;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+        }
+
+        .included-item p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Pricing */
+        .pricing {
+            background: white;
+        }
+
+        .pricing-card {
+            max-width: 500px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--burgundy) 0%, #8b3d47 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(201,169,98,0.15) 0%, transparent 70%);
+        }
+
+        .pricing-card > * {
+            position: relative;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-card .subtitle {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .price-note {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .pricing-card .btn {
+            background: var(--gold);
+            color: var(--text-dark);
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-card .btn:hover {
+            background: var(--gold-light);
+        }
+
+        .pricing-features {
+            text-align: left;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .pricing-features li {
+            list-style: none;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* About */
+        .about {
+            background: var(--cream);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, var(--burgundy) 0%, #8b3d47 100%);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            color: white;
+        }
+
+        .about-image .credential {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-image .credential-sub {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .about-text h2 {
+            font-size: 2.25rem;
+            color: var(--burgundy);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p {
+            color: var(--text-medium);
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* Free Tool CTA */
+        .free-tool {
+            background: white;
+            text-align: center;
+        }
+
+        .free-tool-card {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .free-tool-card h3 {
+            font-size: 1.75rem;
+            color: var(--burgundy);
+            margin-bottom: 0.75rem;
+        }
+
+        .free-tool-card p {
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        /* FAQ */
+        .faq {
+            background: var(--cream);
+        }
+
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .faq-question:hover {
+            color: var(--burgundy);
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--gold);
+            transition: transform 0.2s;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            padding: 0 1.5rem 1.25rem;
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            background: linear-gradient(135deg, var(--burgundy) 0%, #8b3d47 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .final-cta p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .final-cta .btn {
+            background: var(--gold);
+            color: var(--text-dark);
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .final-cta .btn:hover {
+            background: var(--gold-light);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer p {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 7rem 1.5rem 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .pricing-card {
+                padding: 2rem;
+            }
+
+            .price {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">CellarSense</a>
+        <div class="nav-links">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#whats-included">What's Included</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="https://cal.com/anthony-cicconi-b0opmf/wedding-wine-consultation" class="btn btn-primary">Book Now</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">WSET-Certified Sommelier</div>
+            <h1>Wedding Wine, Solved.</h1>
+            <p>Stop stressing over wine selection. Get a personalized guide with expert recommendations, exact quantities, and a complete budget—tailored to your celebration.</p>
+            <div class="hero-buttons">
+                <a href="https://cal.com/anthony-cicconi-b0opmf/wedding-wine-consultation" class="btn btn-primary">Book Your Consultation — $199</a>
+                <a href="/app" class="btn btn-outline">Try Free Wine Finder</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <div class="gold-line"></div>
+                <p>From consultation to celebration in three simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Book a Call</h3>
+                    <p>Schedule a 30-minute consultation. Tell me about your venue, guest count, menu, and wedding vibe.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Receive Your Guide</h3>
+                    <p>Within 3-5 days, get your personalized 8-page wine guide with hand-picked selections and complete logistics.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Enjoy Your Day</h3>
+                    <p>Order with confidence, follow the day-of timeline, and focus on what matters—celebrating your love.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What's Included -->
+    <section class="whats-included" id="whats-included">
+        <div class="container">
+            <div class="section-header">
+                <h2>What's In Your Guide</h2>
+                <div class="gold-line"></div>
+                <p>Everything you need to nail your wedding wine</p>
+            </div>
+            <div class="included-grid">
+                <div class="included-item">
+                    <div class="included-icon">🍾</div>
+                    <div>
+                        <h4>Curated Wine Selections</h4>
+                        <p>Sparkling, white, red, and rosé picks tailored to your taste, venue, and menu pairings.</p>
+                    </div>
+                </div>
+                <div class="included-item">
+                    <div class="included-icon">📊</div>
+                    <div>
+                        <h4>Exact Quantities</h4>
+                        <p>Never run dry or over-order. Calculated for your guest count, bar setup, and drinking style.</p>
+                    </div>
+                </div>
+                <div class="included-item">
+                    <div class="included-icon">💰</div>
+                    <div>
+                        <h4>Complete Budget</h4>
+                        <p>Full cost breakdown including tax estimates. Know exactly what you'll spend.</p>
+                    </div>
+                </div>
+                <div class="included-item">
+                    <div class="included-icon">⏰</div>
+                    <div>
+                        <h4>Day-of Timeline</h4>
+                        <p>When to chill, when to open, when to pour. Your wines served at perfect temperature.</p>
+                    </div>
+                </div>
+                <div class="included-item">
+                    <div class="included-icon">🛒</div>
+                    <div>
+                        <h4>Where to Buy</h4>
+                        <p>Online retailers, local shop recommendations, and backup alternatives if your first choice is unavailable.</p>
+                    </div>
+                </div>
+                <div class="included-item">
+                    <div class="included-icon">✨</div>
+                    <div>
+                        <h4>Personal Touch</h4>
+                        <p>A guide designed for YOUR wedding—not generic advice. Includes tasting notes and "why this wine" explanations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple Pricing</h2>
+                <div class="gold-line"></div>
+                <p>One consultation, one guide, zero wine stress</p>
+            </div>
+            <div class="pricing-card">
+                <h3>Wedding Wine Consultation</h3>
+                <p class="subtitle">Everything you need for your celebration</p>
+                <div class="price">$199</div>
+                <p class="price-note">One-time fee • No hidden costs</p>
+                <a href="https://cal.com/anthony-cicconi-b0opmf/wedding-wine-consultation" class="btn">Book Your Consultation</a>
+                <ul class="pricing-features">
+                    <li>30-minute consultation call</li>
+                    <li>Custom 8-page wine guide (PDF)</li>
+                    <li>4 hand-picked wine recommendations</li>
+                    <li>Quantity calculations for your guest count</li>
+                    <li>Full budget breakdown with tax</li>
+                    <li>Day-of serving timeline</li>
+                    <li>Backup alternatives + buying guide</li>
+                    <li>Delivered within 3-5 business days</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-image">
+                    <div class="credential">WSET</div>
+                    <div class="credential-sub">Certified Sommelier</div>
+                </div>
+                <div class="about-text">
+                    <h2>Your Sommelier</h2>
+                    <p>I'm Anthony—a WSET-certified wine professional who believes your wedding wine shouldn't be a source of stress.</p>
+                    <p>After helping friends and family navigate wine selection for their weddings (and seeing how overwhelming it can be), I created CellarSense to give every couple access to expert guidance.</p>
+                    <p>Whether you're planning an intimate backyard gathering or a 200-guest reception, I'll help you find wines that fit your taste, your menu, and your budget.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Free Tool -->
+    <section class="free-tool">
+        <div class="container">
+            <div class="free-tool-card">
+                <h3>Not Planning a Wedding?</h3>
+                <p>Try our free wine finder for restaurant recommendations. Get instant pairing suggestions based on your meal and preferences.</p>
+                <a href="/app" class="btn btn-outline">Try Free Wine Finder →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Common Questions</h2>
+                <div class="gold-line"></div>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">How quickly will I receive my wine guide?</div>
+                    <div class="faq-answer">
+                        <p>You'll receive your personalized 8-page guide within 3-5 business days after our consultation call. Need it faster? Let me know during booking and I'll do my best to accommodate.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What if I can't find the recommended wines?</div>
+                    <div class="faq-answer">
+                        <p>Your guide includes two backup alternatives for every wine recommendation, plus a list of reliable online and local retailers. You'll always have options.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Do you work with any budget?</div>
+                    <div class="faq-answer">
+                        <p>Absolutely. Whether you're looking for great value or splurge-worthy bottles, I'll tailor recommendations to your budget. Just let me know your range during our call.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Can you help with non-wine beverages?</div>
+                    <div class="faq-answer">
+                        <p>My expertise is wine, but I'm happy to give general guidance on beer, cocktails, or non-alcoholic options during our call. The guide focuses on wine selections.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What's your refund policy?</div>
+                    <div class="faq-answer">
+                        <p>If you're not happy with your guide, let me know within 7 days and I'll make revisions or issue a full refund. Your satisfaction matters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Check Wine Off Your List?</h2>
+            <p>Book your consultation today and get a personalized wine guide designed for your celebration.</p>
+            <a href="https://cal.com/anthony-cicconi-b0opmf/wedding-wine-consultation" class="btn">Book Now — $199</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">CellarSense</div>
+        <p>© 2025 CellarSense. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
