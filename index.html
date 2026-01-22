@@ -1363,19 +1363,25 @@
             threshold: 0.15
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.animate-on-scroll, .animate-stagger').forEach(el => {
-            observer.observe(el);
+        if (window.innerWidth > 768) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                entry.target.classList.remove('visible');
+            }
         });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll, .animate-stagger').forEach(el => {
+        observer.observe(el);
+    });
+} else {
+    document.querySelectorAll('.animate-on-scroll, .animate-stagger').forEach(el => {
+        el.classList.add('visible');
+    });
+}
 
         // Pricing carousel dots (mobile)
         const pricingGrid = document.querySelector('.pricing-grid');
