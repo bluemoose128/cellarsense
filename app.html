@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Pairing Tool | CellarSense</title>
+    <meta name="description" content="Free AI-powered wine pairing tool. Enter any dish and get expert wine recommendations instantly.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --burgundy: #722F37;
+            --burgundy-dark: #5a252c;
+            --gold: #C5A572;
+            --gold-light: #d4ba8a;
+            --cream: #FAF8F5;
+            --cream-dark: #f0ece5;
+            --text-dark: #2c2c2c;
+            --text-medium: #666;
+            --text-light: #999;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 0.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            height: 250px !important;
+            min-height: 250px !important;
+            max-height: 250px !important;
+            width: auto !important;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .header-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .header-links a:hover {
+            color: var(--burgundy);
+        }
+
+        .header-cta {
+            background: var(--burgundy);
+            color: var(--white) !important;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        .header-cta:hover {
+            background: var(--burgundy-dark) !important;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .app-title {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            color: var(--burgundy);
+        }
+
+        .app-subtitle {
+            text-align: center;
+            color: var(--text-medium);
+            margin-bottom: 2.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        /* Input Section */
+        .input-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 2rem;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--cream-dark);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--burgundy);
+        }
+
+        .submit-btn {
+            background: var(--burgundy);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--burgundy-dark);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            color: var(--burgundy);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--cream-dark);
+            border-top-color: var(--burgundy);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text-medium);
+            font-style: italic;
+        }
+
+        .loading-steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .loading-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .loading-step.active {
+            color: var(--burgundy);
+        }
+
+        .loading-step.done {
+            color: var(--gold);
+        }
+
+        .loading-step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Wine Card */
+        .wine-card {
+            background: var(--cream);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wine-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .wine-category {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--burgundy);
+            margin-bottom: 0.5rem;
+        }
+
+        .wine-name {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .wine-producer {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .wine-notes {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .wine-price {
+            display: inline-block;
+            background: var(--burgundy);
+            color: var(--white);
+            padding: 0.3rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-medium);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+            border-radius: 8px;
+            color: var(--white);
+        }
+
+        .cta-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.85rem 2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .header {
+                padding: 0.25rem 1rem;
+            }
+
+            .logo {
+                height: 180px !important;
+                min-height: 180px !important;
+                max-height: 180px !important;
+            }
+
+            .header-links {
+                gap: 0.75rem;
+            }
+
+            .header-links a:not(.header-cta) {
+                display: none;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .app-title {
+                font-size: 2rem;
+            }
+
+            .input-wrapper {
+                flex-direction: column;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+
+            .loading-steps {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/">
+            <img src="logo.png" alt="CellarSense" class="logo">
+        </a>
+        <div class="header-links">
+            <a href="/">Home</a>
+            <a href="/blog">Blog</a>
+            <a href="https://cal.com/anthony-cicconi-b0opmf/cellarsense-essentials" class="header-cta">Let's Chat</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="app-title">Wine Pairing Tool</h1>
+        <p class="app-subtitle">Enter any dish and discover the perfect wine match</p>
+
+        <div class="input-section">
+            <label class="input-label">What are you eating?</label>
+            <div class="input-wrapper">
+                <input type="text" class="input-field" id="dish-input" placeholder="e.g., Grilled salmon with lemon butter sauce">
+                <button class="submit-btn" id="submit-btn" onclick="getPairing()">Find Pairings</button>
+            </div>
+        </div>
+
+        <div class="results-section" id="results">
+            <div class="empty-state">
+                <div class="empty-state-icon">🍷</div>
+                <p>Enter a dish above to get personalized wine pairing recommendations</p>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h3>Need More Personalized Help?</h3>
+            <p>This tool gives you a taste of what CellarSense can do. For your wedding or special event, get comprehensive guidance tailored to your specific needs.</p>
+            <a href="https://cal.com/anthony-cicconi-b0opmf/cellarsense-essentials" class="cta-btn">Let's Chat</a>
+        </div>
+    </div>
+
+    <script>
+        const loadingMessages = [
+            "Analyzing dish characteristics...",
+            "Considering flavor profiles...",
+            "Selecting ideal pairings...",
+            "Preparing recommendations..."
+        ];
+
+        // Wine pairing database
+        const wineDatabase = {
+            lightWhite: {
+                category: "Crisp White",
+                wines: [
+                    { name: "Chablis", producer: "Louis Michel & Fils", price: "$25-30", notes: "Mineral-driven with bright acidity. Classic unoaked Chardonnay that lets the fruit shine through with subtle flinty notes." },
+                    { name: "Sancerre", producer: "Domaine Vacheron", price: "$28-35", notes: "Loire Valley Sauvignon Blanc with citrus, white flower, and a distinctive chalky minerality." },
+                    { name: "Albariño", producer: "Do Ferreiro", price: "$22-28", notes: "Spanish white with peach, apricot, and saline notes. Perfect for seafood." }
+                ]
+            },
+            richWhite: {
+                category: "Full-Bodied White",
+                wines: [
+                    { name: "White Burgundy", producer: "Roulot Meursault", price: "$45-60", notes: "Luxurious Chardonnay with butter, hazelnut, and citrus. Elegant oak integration." },
+                    { name: "Châteauneuf-du-Pape Blanc", producer: "Château de Beaucastel", price: "$50-70", notes: "Rhône blend with richness, texture, and complexity. White peach and honeysuckle." },
+                    { name: "Viognier", producer: "Yalumba The Virgilius", price: "$35-45", notes: "Aromatic Australian Viognier with apricot, ginger, and a creamy texture." }
+                ]
+            },
+            lightRed: {
+                category: "Light & Elegant Red",
+                wines: [
+                    { name: "Pinot Noir", producer: "Domaine de la Côte", price: "$40-55", notes: "California Pinot with red cherry, earth, and silky tannins. Burgundian elegance from Santa Rita Hills." },
+                    { name: "Beaujolais Cru", producer: "Domaine Lapierre Morgon", price: "$25-32", notes: "Natural Gamay with vibrant red fruit, florals, and a mineral finish." },
+                    { name: "Barbera d'Alba", producer: "G.D. Vajra", price: "$22-28", notes: "Piedmont red with bright cherry, balanced acidity, and food-friendly versatility." }
+                ]
+            },
+            boldRed: {
+                category: "Bold & Structured Red",
+                wines: [
+                    { name: "Barolo", producer: "Giacomo Conterno", price: "$60-90", notes: "Nebbiolo at its finest. Tar, roses, cherry, and powerful yet refined tannins." },
+                    { name: "Napa Cabernet", producer: "Matthiasson", price: "$55-70", notes: "Elegant Napa Cab that balances power with restraint. Cassis, herbs, and cedar." },
+                    { name: "Côte-Rôtie", producer: "E. Guigal", price: "$50-65", notes: "Northern Rhône Syrah with bacon fat, violets, and black pepper. Smoky and complex." }
+                ]
+            },
+            rose: {
+                category: "Rosé",
+                wines: [
+                    { name: "Provence Rosé", producer: "Domaine Tempier Bandol", price: "$30-40", notes: "Serious rosé from Bandol. Strawberry, herbs, and mineral depth beyond typical pink wines." },
+                    { name: "Tavel", producer: "Château d'Aqueria", price: "$18-24", notes: "France's most full-bodied rosé. Red fruit, spice, and enough structure for food." }
+                ]
+            },
+            sparkling: {
+                category: "Sparkling",
+                wines: [
+                    { name: "Champagne", producer: "Pierre Gimonnet", price: "$45-55", notes: "Grower Champagne with Chardonnay elegance. Citrus, brioche, and fine persistent bubbles." },
+                    { name: "Crémant de Bourgogne", producer: "Bailly Lapierre", price: "$18-24", notes: "Burgundian sparkler that punches above its price. Crisp apple and toasted almond." },
+                    { name: "Franciacorta", producer: "Ca' del Bosco", price: "$35-45", notes: "Italy's answer to Champagne. Refined bubbles with white flower and citrus notes." }
+                ]
+            }
+        };
+
+        function analyzeDish(dish) {
+            const lower = dish.toLowerCase();
+            const pairings = [];
+
+            // Seafood logic
+            if (/salmon|tuna|swordfish|mahi|halibut/i.test(lower)) {
+                if (/grilled|blackened|teriyaki|soy/i.test(lower)) {
+                    pairings.push('lightRed');
+                } else {
+                    pairings.push('richWhite');
+                }
+            } else if (/shrimp|crab|lobster|scallop|oyster|clam|mussel|fish|cod|bass|trout/i.test(lower)) {
+                if (/cream|butter|rich/i.test(lower)) {
+                    pairings.push('richWhite');
+                } else {
+                    pairings.push('lightWhite');
+                }
+            }
+
+            // Poultry logic
+            if (/chicken|turkey|duck|quail/i.test(lower)) {
+                if (/duck|roast|grilled|bbq|barbecue/i.test(lower)) {
+                    pairings.push('lightRed');
+                } else if (/cream|alfredo|butter/i.test(lower)) {
+                    pairings.push('richWhite');
+                } else {
+                    pairings.push('lightWhite');
+                }
+            }
+
+            // Red meat logic
+            if (/steak|beef|lamb|pork|ribs|brisket|filet|ribeye|sirloin/i.test(lower)) {
+                pairings.push('boldRed');
+            }
+
+            // Pasta logic
+            if (/pasta|spaghetti|linguine|fettuccine|penne|ravioli/i.test(lower)) {
+                if (/tomato|marinara|bolognese|red sauce/i.test(lower)) {
+                    pairings.push('lightRed');
+                } else if (/cream|alfredo|carbonara|butter/i.test(lower)) {
+                    pairings.push('richWhite');
+                } else if (/pesto|olive oil|garlic/i.test(lower)) {
+                    pairings.push('lightWhite');
+                }
+            }
+
+            // Pizza logic
+            if (/pizza/i.test(lower)) {
+                pairings.push('lightRed');
+            }
+
+            // Salad logic
+            if (/salad/i.test(lower) && pairings.length === 0) {
+                pairings.push('lightWhite');
+                pairings.push('rose');
+            }
+
+            // Spicy food
+            if (/spicy|thai|indian|curry|szechuan|jalapeño|hot/i.test(lower)) {
+                pairings.push('rose');
+                if (!pairings.includes('lightWhite')) pairings.push('lightWhite');
+            }
+
+            // Cheese
+            if (/cheese|charcuterie/i.test(lower)) {
+                pairings.push('lightRed');
+                pairings.push('sparkling');
+            }
+
+            // Celebration/appetizers
+            if (/appetizer|celebration|toast|party|wedding/i.test(lower)) {
+                pairings.push('sparkling');
+            }
+
+            // Default fallbacks
+            if (pairings.length === 0) {
+                pairings.push('lightRed');
+                pairings.push('lightWhite');
+            }
+
+            return [...new Set(pairings)].slice(0, 3);
+        }
+
+        async function getPairing() {
+            const dish = document.getElementById('dish-input').value.trim();
+            if (!dish) return;
+
+            const resultsDiv = document.getElementById('results');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            submitBtn.disabled = true;
+
+            // Show loading
+            let messageIndex = 0;
+            resultsDiv.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">${loadingMessages[0]}</p>
+                    <div class="loading-steps">
+                        <div class="loading-step active"><span class="loading-step-dot"></span> Analyze</div>
+                        <div class="loading-step"><span class="loading-step-dot"></span> Match</div>
+                        <div class="loading-step"><span class="loading-step-dot"></span> Recommend</div>
+                    </div>
+                </div>
+            `;
+
+            const loadingInterval = setInterval(() => {
+                messageIndex++;
+                if (messageIndex < loadingMessages.length) {
+                    const textEl = resultsDiv.querySelector('.loading-text');
+                    const steps = resultsDiv.querySelectorAll('.loading-step');
+                    if (textEl) textEl.textContent = loadingMessages[messageIndex];
+                    steps.forEach((step, i) => {
+                        step.classList.remove('active', 'done');
+                        if (i < messageIndex) step.classList.add('done');
+                        if (i === messageIndex) step.classList.add('active');
+                    });
+                }
+            }, 3500);
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, loadingMessages.length * 3500));
+            clearInterval(loadingInterval);
+
+            // Get pairings
+            const pairingKeys = analyzeDish(dish);
+            let html = `<h2 class="results-title">Pairings for "${dish}"</h2>`;
+
+            pairingKeys.forEach(key => {
+                const category = wineDatabase[key];
+                if (category) {
+                    const wine = category.wines[Math.floor(Math.random() * category.wines.length)];
+                    html += `
+                        <div class="wine-card">
+                            <div class="wine-category">${category.category}</div>
+                            <h3 class="wine-name">${wine.name}</h3>
+                            <p class="wine-producer">${wine.producer}</p>
+                            <p class="wine-notes">${wine.notes}</p>
+                            <span class="wine-price">${wine.price}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            resultsDiv.innerHTML = html;
+            submitBtn.disabled = false;
+        }
+
+        // Enter key support
+        document.getElementById('dish-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getPairing();
+            }
+        });
+    </script>
+</body>
+</html>
