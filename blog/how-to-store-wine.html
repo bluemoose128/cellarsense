@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Store Wine at Home (No Cellar Required) | CellarSense</title>
+    <meta name="description" content="You don't need a wine cellar to store wine properly. Here's what actually matters for keeping your bottles in good shape.">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --burgundy: #722F37;
+            --burgundy-dark: #5a252c;
+            --gold: #C9A962;
+            --cream: #FAF8F5;
+            --cream-dark: #EDE8E0;
+            --text-dark: #2D2D2D;
+            --text-medium: #5A5A5A;
+            --white: #FFFFFF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans', sans-serif; color: var(--text-dark); line-height: 1.7; background: var(--cream); }
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            padding: 0.5rem 2rem;
+            height: 85px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .nav-logo { height: 160px; width: auto; margin: -37px 0; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-medium); text-decoration: none; font-size: 0.88rem; font-weight: 500; }
+        .nav-links a:hover { color: var(--burgundy); }
+        .hamburger { display: none; }
+        .btn { background: var(--burgundy); color: white !important; padding: 0.65rem 1.3rem; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 0.88rem; }
+        .btn:hover { background: var(--burgundy-dark); }
+        article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 7rem 1.5rem 3rem;
+            background: white;
+        }
+        .article-meta { color: var(--text-medium); font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .article-author { color: var(--burgundy); font-size: 0.9rem; font-weight: 500; margin-bottom: 1.5rem; }
+        h1 { font-size: 2.5rem; color: var(--burgundy); margin-bottom: 0.5rem; line-height: 1.2; }
+        h2 { font-size: 1.5rem; color: var(--burgundy); margin: 2rem 0 1rem; }
+        p { margin-bottom: 1.25rem; color: var(--text-dark); }
+        ul { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        .highlight-box { background: var(--cream); border-left: 3px solid var(--gold); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+        .quick-answer {
+            background: linear-gradient(135deg, var(--burgundy) 0%, #8b3d47 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0 2rem;
+        }
+        .quick-answer h3 { color: white; font-size: 1rem; margin: 0 0 0.75rem 0; text-transform: uppercase; letter-spacing: 0.05em; }
+        .quick-answer p { color: rgba(255,255,255,0.95); margin: 0; font-size: 1.05rem; line-height: 1.6; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+        .data-table th { background: var(--burgundy); color: white; padding: 0.75rem 1rem; text-align: left; font-weight: 600; }
+        .data-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--cream-dark); }
+        .data-table tr:nth-child(even) { background: var(--cream); }
+        .faq-section { margin: 2.5rem 0; }
+        .faq-item { border-bottom: 1px solid var(--cream-dark); padding: 1.25rem 0; }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-question { font-weight: 600; color: var(--burgundy); margin-bottom: 0.5rem; font-size: 1.05rem; }
+        .faq-answer { color: var(--text-medium); margin: 0; }
+        footer { background: var(--text-dark); color: white; padding: 2rem; text-align: center; }
+        footer a { color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 0.5rem; }
+        footer p { opacity: 0.5; font-size: 0.8rem; margin-top: 0.5rem; }
+        @media (max-width: 768px) {
+            nav { height: 85px; padding: 0.5rem 1rem; }
+            .nav-logo { height: 100px; margin: -10px 0; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.75rem;
+                border-bottom: 1px solid #EDE8E0;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .nav-links.open { display: flex; }
+            .nav-links a { padding: 0.5rem 0; }
+            .nav-links .btn { width: 100%; text-align: center; }
+            .hamburger {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                padding: 10px;
+            }
+            .hamburger span {
+                width: 28px;
+                height: 3px;
+                background: var(--burgundy);
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            h1 { font-size: 2rem; }
+            article { padding: 6.5rem 1.5rem 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/"><img src="/images/Horizontal_Burgundy.png" alt="CellarSense" class="nav-logo"></a>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links">
+            <a href="/#how-it-works">How It Works</a>
+            <a href="/#whats-included">What's Included</a>
+            <a href="/#pricing">Pricing</a>
+            <a href="/#faq">FAQ</a>
+            <a href="/blog.html">Blog</a>
+            <a href="https://cal.com/anthony-cicconi-b0opmf/cellarsense-complete" class="btn">Book Now</a>
+        </div>
+    </nav>
+
+    <article>
+        <p class="article-meta">November 25, 2025</p>
+        <p class="article-author">By Anthony Cicconi</p>
+        <h1>How to Store Wine at Home (No Cellar Required)</h1>
+
+        <div class="quick-answer">
+            <h3>Quick Answer</h3>
+            <p>Store wine in a cool (55-65°F), dark place with stable temperature. A closet or basement works fine. Most wine should be drunk within 1-2 years anyway, so don't overthink it.</p>
+        </div>
+
+        
+        <p>You bought a few bottles you're excited about. Maybe some for an upcoming dinner, a couple to save for a special occasion. Now where do you put them?</p>
+        
+        <p>Good news: you don't need a temperature-controlled wine cellar or a fancy wine fridge. You just need to understand what actually matters.</p>
+
+        <h2>Temperature Stability Is Everything</h2>
+        
+        <p>The ideal storage temperature is around 55°F, but here's what matters more: consistency. A wine stored steadily at 65°F will fare better than one that swings between 50°F and 70°F throughout the day.</p>
+        
+        <p>Temperature fluctuations cause the liquid to expand and contract, which can push the cork out slightly and let air in. That's how wine goes bad prematurely.</p>
+
+        <div class="highlight-box">
+            <strong>Find a stable spot:</strong> Interior closets, under stairs, or a cool basement corner. Avoid the kitchen (temperature swings from cooking) and anywhere near windows or exterior walls.
+        </div>
+
+        <h2>What About Your Regular Refrigerator?</h2>
+        
+        <p>Your kitchen fridge is fine for whites you'll drink within a few months. It's too cold and too dry for long-term storage, though. If you're keeping a bottle for a year or more, find somewhere else.</p>
+
+        <h2>Horizontal vs. Vertical</h2>
+        
+        <p>Storing wine on its side keeps the cork moist, which matters for long-term aging. A dry cork can shrink and let air in.</p>
+        
+        <p>But here's the nuance: this only matters for cork-sealed bottles you're storing for years. Screw caps don't have this issue. And if you're drinking the wine within a few months, standing it upright is perfectly fine.</p>
+
+        <h2>Keep It Dark</h2>
+        
+        <p>Light, especially sunlight, can degrade wine over time. Those beautiful wine racks in sunny kitchens look great in magazines but aren't doing the wine any favors. Store bottles somewhere dark, or at least away from direct light.</p>
+
+        <h2>Most Wine Doesn't Need Long Aging</h2>
+        
+        <p>Here's something the wine industry doesn't always tell you: the vast majority of wines are meant to be drunk within a year or two of purchase. They've already been aged at the winery. Keeping them longer won't make them better. It might make them worse.</p>
+        
+        <p>Only a small percentage of wines, usually high-end bottles with serious tannins or acidity, will genuinely improve over 5, 10, or 20 years. If you didn't specifically buy a wine for aging, don't stress about perfect storage. Just drink it.</p>
+
+        <h2>Ready to Start Collecting?</h2>
+        
+        <p>Here's the simplest way to begin: find a dark, temperature-stable spot in your home (a closet works great). Buy wines you actually want to drink. If you want to see how a wine evolves, buy three bottles of the same wine. Drink one now, one in a year, one in two or three years.</p>
+        
+        <p>That's it. No fancy equipment required. Just good wine, reasonable storage, and patience.</p>
+
+        <h2>Storage Cheat Sheet</h2>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Storage Location</th>
+                    <th>Good For</th>
+                    <th>Avoid For</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Kitchen fridge</td>
+                    <td>Whites/rosés for 1-3 months</td>
+                    <td>Long-term storage (too cold, too dry)</td>
+                </tr>
+                <tr>
+                    <td>Interior closet</td>
+                    <td>All wines, 1-3 years</td>
+                    <td>Nothing, this is ideal</td>
+                </tr>
+                <tr>
+                    <td>Basement</td>
+                    <td>Long-term aging if cool</td>
+                    <td>Damp basements (mold risk)</td>
+                </tr>
+                <tr>
+                    <td>Kitchen counter</td>
+                    <td>Bottles you'll drink this week</td>
+                    <td>Anything longer than a week</td>
+                </tr>
+                <tr>
+                    <td>Garage</td>
+                    <td>Nothing</td>
+                    <td>All wines (temp swings too extreme)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-section">
+            <div class="faq-item">
+                <p class="faq-question">Do I need a wine fridge?</p>
+                <p class="faq-answer">Not unless you're storing 20+ bottles or keeping wine for several years. A cool, dark closet works for most people. Wine fridges are nice to have, not need to have.</p>
+            </div>
+
+            <div class="faq-item">
+                <p class="faq-question">How long can I keep an opened bottle?</p>
+                <p class="faq-answer">3-5 days in the fridge with the cork in. Sparkling wine loses its fizz faster, usually 1-2 days. A vacuum pump can extend this slightly but isn't magic.</p>
+            </div>
+
+            <div class="faq-item">
+                <p class="faq-question">Can wine go bad from heat?</p>
+                <p class="faq-answer">Yes. Temperatures above 70°F for extended periods will age wine prematurely. Above 80°F can "cook" the wine, giving it a stewed fruit taste. If a bottle was left in a hot car, it might be compromised.</p>
+            </div>
+
+            <div class="faq-item">
+                <p class="faq-question">Does the position really matter?</p>
+                <p class="faq-answer">Only for cork-sealed bottles stored longer than 6 months. Laying them horizontal keeps the cork moist. For screw caps or short-term storage, position doesn't matter at all.</p>
+            </div>
+        </div>
+                </article>
+
+    <footer>
+        <a href="/">Home</a>
+        <a href="/blog.html">Blog</a>
+        <a href="mailto:hello@cellarsense.ai">Contact</a>
+        <p>© 2026 CellarSense. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Wine Guide: Exactly What to Buy and How Much | CellarSense</title>
+    <meta name="description" content="The complete guide to wedding wine. Learn how much wine you need, what types to serve, how to budget, and where to buy. From a WSET-certified wine expert.">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --burgundy: #722F37;
+            --burgundy-dark: #5a252c;
+            --gold: #C9A962;
+            --cream: #FAF8F5;
+            --cream-dark: #EDE8E0;
+            --text-dark: #2D2D2D;
+            --text-medium: #5A5A5A;
+            --white: #FFFFFF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans', sans-serif; color: var(--text-dark); line-height: 1.7; background: var(--cream); }
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            padding: 0.5rem 2rem;
+            height: 85px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .nav-logo { height: 160px; width: auto; margin: -37px 0; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-medium); text-decoration: none; font-size: 0.88rem; font-weight: 500; }
+        .nav-links a:hover { color: var(--burgundy); }
+        .hamburger { display: none; }
+        .btn { background: var(--burgundy); color: white !important; padding: 0.65rem 1.3rem; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 0.88rem; }
+        .btn:hover { background: var(--burgundy-dark); }
+        article {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 7rem 1.5rem 3rem;
+            background: white;
+        }
+        .article-meta { color: var(--text-medium); font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .article-author { color: var(--burgundy); font-size: 0.9rem; font-weight: 500; margin-bottom: 1.5rem; }
+        h1 { font-size: 2.5rem; color: var(--burgundy); margin-bottom: 0.5rem; line-height: 1.2; }
+        h2 { font-size: 1.5rem; color: var(--burgundy); margin: 2.5rem 0 1rem; }
+        h3 { font-size: 1.2rem; color: var(--burgundy); margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1.25rem; color: var(--text-dark); }
+        ul, ol { margin: 1rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        
+        /* Quick Answer Box */
+        .quick-answer {
+            background: linear-gradient(135deg, var(--burgundy) 0%, #8b3d47 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0 2rem;
+        }
+        .quick-answer h3 {
+            color: white;
+            font-size: 1rem;
+            margin: 0 0 0.75rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .quick-answer p {
+            color: rgba(255,255,255,0.95);
+            margin: 0;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        /* Table of Contents */
+        .toc {
+            background: var(--cream);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        .toc h3 {
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+        }
+        .toc ul {
+            margin: 0;
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+        .toc a {
+            color: var(--burgundy);
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        .data-table th {
+            background: var(--burgundy);
+            color: white;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+        .data-table tr:nth-child(even) {
+            background: var(--cream);
+        }
+        
+        /* Highlight Box */
+        .highlight-box {
+            background: var(--cream);
+            border-left: 4px solid var(--gold);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .highlight-box p {
+            margin: 0;
+        }
+        
+        /* Internal Links */
+        .internal-link {
+            display: block;
+            background: var(--cream);
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-decoration: none;
+            color: var(--text-dark);
+            border-left: 4px solid var(--burgundy);
+            transition: all 0.2s;
+        }
+        .internal-link:hover {
+            background: var(--cream-dark);
+        }
+        .internal-link strong {
+            color: var(--burgundy);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .internal-link span {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            margin: 2.5rem 0;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--cream-dark);
+            padding: 1.25rem 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: var(--burgundy);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+        .faq-answer {
+            color: var(--text-medium);
+            margin: 0;
+        }
+        
+        /* CTA Box */
+        .cta-box {
+            background: linear-gradient(135deg, var(--burgundy) 0%, #8b3d47 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 2.5rem 0;
+        }
+        .cta-box h3 {
+            color: white;
+            margin: 0 0 0.5rem 0;
+        }
+        .cta-box p {
+            color: rgba(255,255,255,0.9);
+            margin: 0 0 1.25rem 0;
+        }
+        .cta-box .btn {
+            background: var(--gold);
+            color: var(--text-dark) !important;
+        }
+        .cta-box .btn:hover {
+            background: #d4b978;
+        }
+        
+        footer { background: var(--text-dark); color: white; padding: 2rem; text-align: center; }
+        footer a { color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 0.5rem; }
+        footer p { opacity: 0.5; font-size: 0.8rem; margin-top: 0.5rem; }
+        
+        @media (max-width: 768px) {
+            nav { height: 85px; padding: 0.5rem 1rem; }
+            .nav-logo { height: 100px; margin: -10px 0; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.75rem;
+                border-bottom: 1px solid #EDE8E0;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .nav-links.open { display: flex; }
+            .nav-links a { padding: 0.5rem 0; }
+            .nav-links .btn { width: 100%; text-align: center; }
+            .hamburger {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                padding: 10px;
+            }
+            .hamburger span {
+                width: 28px;
+                height: 3px;
+                background: var(--burgundy);
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+            h1 { font-size: 2rem; }
+            article { padding: 6.5rem 1.5rem 3rem; }
+            .data-table { font-size: 0.85rem; }
+            .data-table th, .data-table td { padding: 0.5rem 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/"><img src="/images/Horizontal_Burgundy.png" alt="CellarSense" class="nav-logo"></a>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links">
+            <a href="/#how-it-works">How It Works</a>
+            <a href="/#whats-included">What's Included</a>
+            <a href="/#pricing">Pricing</a>
+            <a href="/#faq">FAQ</a>
+            <a href="/blog.html">Blog</a>
+            <a href="https://cal.com/anthony-cicconi-b0opmf/cellarsense-complete" class="btn">Book Now</a>
+        </div>
+    </nav>
+
+    <article>
+        <p class="article-meta">January 22, 2026</p>
+        <p class="article-author">By Anthony Cicconi</p>
+        <h1>Wedding Wine Guide: Exactly What to Buy (and How Much)</h1>
+
+        <div class="quick-answer">
+            <h3>Quick Answer</h3>
+            <p>Plan for about half a bottle per guest for a 4-5 hour reception. For 100 guests, that's roughly 50 bottles total. Split it 50% white/sparkling, 30% red, 20% rosé (adjust based on season and menu). Budget $12-18 per bottle for solid quality without overspending.</p>
+        </div>
+
+        <p>Planning wine for a wedding can feel overwhelming. How much do you actually need? What types should you get? How do you avoid running out (or wasting money on too much)?</p>
+        
+        <p>This guide covers everything you need to know. I've helped dozens of couples figure this out, and the process is simpler than most people think once you have a framework.</p>
+
+        <div class="toc">
+            <h3>What We'll Cover</h3>
+            <ul>
+                <li><a href="#how-much">How Much Wine Do You Need?</a></li>
+                <li><a href="#types">What Types of Wine to Serve</a></li>
+                <li><a href="#budget">Setting Your Wine Budget</a></li>
+                <li><a href="#when-to-buy">When and Where to Buy</a></li>
+                <li><a href="#storage">Storing Wine Before the Wedding</a></li>
+                <li><a href="#day-of">Day-Of: Serving and Temperature</a></li>
+                <li><a href="#faqs">Frequently Asked Questions</a></li>
+            </ul>
+        </div>
+
+        <h2 id="how-much">How Much Wine Do You Need?</h2>
+        
+        <p>The standard rule is half a bottle per guest for a typical 4-5 hour reception. This assumes wine is the primary alcohol (not competing with a full cocktail bar) and accounts for the fact that not everyone drinks.</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Guest Count</th>
+                    <th>Total Bottles</th>
+                    <th>Cases (12 bottles)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>50 guests</td>
+                    <td>25-30 bottles</td>
+                    <td>2-3 cases</td>
+                </tr>
+                <tr>
+                    <td>75 guests</td>
+                    <td>38-45 bottles</td>
+                    <td>3-4 cases</td>
+                </tr>
+                <tr>
+                    <td>100 guests</td>
+                    <td>50-60 bottles</td>
+                    <td>4-5 cases</td>
+                </tr>
+                <tr>
+                    <td>150 guests</td>
+                    <td>75-90 bottles</td>
+                    <td>6-8 cases</td>
+                </tr>
+                <tr>
+                    <td>200 guests</td>
+                    <td>100-120 bottles</td>
+                    <td>8-10 cases</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="highlight-box">
+            <p><strong>Adjust up</strong> if: your crowd are big wine drinkers, reception is longer than 5 hours, or wine is the only alcohol option.</p>
+            <p style="margin-top: 0.75rem;"><strong>Adjust down</strong> if: you're also serving beer and cocktails, it's a lunch reception, or you know many guests don't drink.</p>
+        </div>
+
+        <h2 id="types">What Types of Wine to Serve</h2>
+
+        <p>You don't need a huge selection. Three types is plenty for most weddings: a white, a red, and either a sparkling or rosé.</p>
+
+        <h3>Recommended Split</h3>
+        <p>For a spring/summer wedding: 50% white or rosé, 30% red, 20% sparkling (for toasts)</p>
+        <p>For a fall/winter wedding: 40% white, 40% red, 20% sparkling</p>
+
+        <h3>Safe Crowd-Pleasers</h3>
+        <p>If you want wines that most people will enjoy without strong opinions:</p>
+        <ul>
+            <li><strong>White:</strong> Pinot Grigio, Sauvignon Blanc, or unoaked Chardonnay</li>
+            <li><strong>Red:</strong> Pinot Noir or a soft Merlot</li>
+            <li><strong>Sparkling:</strong> Prosecco or Cava (save Champagne for your own toast if budget is tight)</li>
+            <li><strong>Rosé:</strong> Provence-style dry rosé</li>
+        </ul>
+
+        <a href="/blog/food-pairing-101.html" class="internal-link">
+            <strong>Related: Wine and Food Pairing 101</strong>
+            <span>Learn the basics of matching wine to your reception menu</span>
+        </a>
+
+        <h2 id="budget">Setting Your Wine Budget</h2>
+
+        <p>Wine doesn't need to be expensive to be good, especially when you're serving it at scale. Most guests won't notice the difference between a $15 bottle and a $40 bottle at a busy reception.</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Budget Level</th>
+                    <th>Per Bottle</th>
+                    <th>100 Guests Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Budget-friendly</td>
+                    <td>$8-12</td>
+                    <td>$400-720</td>
+                </tr>
+                <tr>
+                    <td>Mid-range (recommended)</td>
+                    <td>$12-18</td>
+                    <td>$600-1,080</td>
+                </tr>
+                <tr>
+                    <td>Premium</td>
+                    <td>$18-30</td>
+                    <td>$900-1,800</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>For most weddings, the $12-18 range hits the sweet spot. You can find genuinely good wines that won't embarrass you, without blowing the budget.</p>
+
+        <a href="/blog/find-wine-deals.html" class="internal-link">
+            <strong>Related: How to Find Great Wine Without Overpaying</strong>
+            <span>Where to find quality bottles at better prices</span>
+        </a>
+
+        <h2 id="when-to-buy">When and Where to Buy</h2>
+
+        <h3>Timing</h3>
+        <p>Buy 4-6 weeks before the wedding. This gives you time to store it properly and handle any issues. Don't wait until the last week.</p>
+
+        <h3>Where to Buy</h3>
+        <ul>
+            <li><strong>Costco:</strong> Excellent prices, solid selection. Kirkland brand wines are genuinely good.</li>
+            <li><strong>Total Wine:</strong> Huge selection, case discounts (usually 10-15% off)</li>
+            <li><strong>Local wine shops:</strong> Can offer personalized advice and may match prices</li>
+            <li><strong>Wholesale clubs:</strong> Good for large quantities of reliable options</li>
+        </ul>
+
+        <div class="highlight-box">
+            <p><strong>Pro tip:</strong> Always ask about case discounts and return policies. Many stores will take back unopened bottles, which is huge for weddings where you might overbuy slightly.</p>
+        </div>
+
+        <h2 id="storage">Storing Wine Before the Wedding</h2>
+
+        <p>You don't need a wine cellar. You just need a cool, dark spot where the temperature stays relatively stable.</p>
+
+        <a href="/blog/how-to-store-wine.html" class="internal-link">
+            <strong>Related: How to Store Wine at Home</strong>
+            <span>Everything you need to know about keeping wine in good condition</span>
+        </a>
+
+        <p>Key points:</p>
+        <ul>
+            <li>Avoid direct sunlight and heat (no garage in summer)</li>
+            <li>55-65°F is ideal, but consistency matters more than exact temperature</li>
+            <li>A basement, closet, or even under the bed works fine for a few weeks</li>
+            <li>Keep boxes closed until you need them</li>
+        </ul>
+
+        <h2 id="day-of">Day-Of: Serving and Temperature</h2>
+
+        <h3>Temperature Guide</h3>
+        <ul>
+            <li><strong>Sparkling:</strong> 40-45°F (well chilled)</li>
+            <li><strong>White and Rosé:</strong> 45-50°F (cold but not ice cold)</li>
+            <li><strong>Red:</strong> 60-65°F (slightly below room temperature)</li>
+        </ul>
+
+        <a href="/blog/make-wine-taste-better.html" class="internal-link">
+            <strong>Related: Simple Ways to Make Wine Taste Better</strong>
+            <span>Temperature tricks and other easy improvements</span>
+        </a>
+
+        <h3>Logistics</h3>
+        <ul>
+            <li>Chill whites and sparkling overnight before the wedding</li>
+            <li>Have ice buckets or tubs available to keep opened whites cold</li>
+            <li>Open reds 30 minutes before service</li>
+            <li>Brief your bartender or catering staff on what you've chosen</li>
+        </ul>
+
+        <div class="cta-box">
+            <h3>Want This Done for You?</h3>
+            <p>I'll create a complete wine plan for your wedding with specific bottle recommendations, exact quantities, and a real budget.</p>
+            <a href="https://cal.com/anthony-cicconi-b0opmf/cellarsense-complete" class="btn">Book a Consultation</a>
+        </div>
+
+        <h2 id="faqs">Frequently Asked Questions</h2>
+
+        <div class="faq-section">
+            <div class="faq-item">
+                <p class="faq-question">Should I let guests choose their own wine?</p>
+                <p class="faq-answer">Having a few pre-selected options is better than an open wine list. It keeps service faster, reduces waste, and ensures everything pairs reasonably well with your menu. Two or three choices is plenty.</p>
+            </div>
+
+            <div class="faq-item">
+                <p class="faq-question">What if my venue requires me to buy through them?</p>
+                <p class="faq-answer">Ask for their wine list in advance and look for the same "crowd-pleaser" styles mentioned above. You can often negotiate on price if you're buying in volume, or ask if they'll match outside pricing.</p>
+            </div>
+
+            <div class="faq-item">
+                <p class="faq-question">Do I need wine for the rehearsal dinner too?</p>
+                <p class="faq-answer">Typically yes, but you can scale way down. Plan for one glass per person and focus on just one white and one red. This is a good place to use slightly nicer bottles if you want, since it's a smaller group.</p>
+            </div>
+
+            <div class="faq-item">
+                <p class="faq-question">What about champagne for the toast?</p>
+                <p class="faq-answer">You only need about a quarter of a glass per person for toasting, so one bottle covers 6-8 guests. For 100 guests, that's 13-17 bottles just for toasts. Prosecco or Cava work great here if Champagne is over budget.</p>
+            </div>
+
+            <div class="faq-item">
+                <p class="faq-question">Can I return unopened bottles?</p>
+                <p class="faq-answer">Many stores accept returns on unopened wine, but policies vary. Ask before you buy. This is why it's smart to slightly overbuy rather than risk running out.</p>
+            </div>
+        </div>
+
+        <h2>More Wine Resources</h2>
+        
+        <p>Dive deeper into specific topics:</p>
+
+        <a href="/blog/navigate-wine-list.html" class="internal-link">
+            <strong>How to Navigate a Wine List</strong>
+            <span>Useful if your venue has a set wine list to choose from</span>
+        </a>
+
+        <a href="/blog/order-wine-for-table.html" class="internal-link">
+            <strong>Ordering Wine for a Group</strong>
+            <span>Tips that apply to rehearsal dinners and smaller wedding events</span>
+        </a>
+
+        <a href="/blog/host-wine-tasting.html" class="internal-link">
+            <strong>How to Host a Wine Tasting</strong>
+            <span>Consider doing a tasting with your wedding party to pick your wines</span>
+        </a>
+
+    </article>
+
+    <footer>
+        <a href="/">Home</a>
+        <a href="/blog.html">Blog</a>
+        <a href="mailto:hello@cellarsense.ai">Contact</a>
+        <p>© 2026 CellarSense. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
