@@ -1,0 +1,14 @@
+{
+  "cleanUrls": true
+}
+```
+
+---
+
+**Step 6: Scroll down and commit**
+
+Scroll to the bottom. You'll see "Commit new file."
+
+In the first box, type a message like:
+```
+Add vercel.json for clean URLs
