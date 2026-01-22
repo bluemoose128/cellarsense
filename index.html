@@ -862,7 +862,7 @@
                 margin: -10px 0;
             }
 
-            .nav-links {
+           .nav-links {
                 display: none;
                 position: absolute;
                 top: 100%;
@@ -874,6 +874,18 @@
                 gap: 0.75rem;
                 border-bottom: 1px solid var(--cream-dark);
                 box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-free-tool {
+                background: transparent !important;
+            }
+            
+            .nav-links a {
+                padding: 0.5rem 0;
             }
             
             .nav-links a {
