@@ -776,6 +776,25 @@
             ]
         };
 
+        // Get flag emoji based on region
+        function getCountryFlag(region) {
+            const regionLower = region.toLowerCase();
+            if (regionLower.includes('france')) return '🇫🇷';
+            if (regionLower.includes('italy')) return '🇮🇹';
+            if (regionLower.includes('spain')) return '🇪🇸';
+            if (regionLower.includes('usa') || regionLower.includes('california') || regionLower.includes('napa') || regionLower.includes('oregon')) return '🇺🇸';
+            if (regionLower.includes('argentina')) return '🇦🇷';
+            if (regionLower.includes('chile')) return '🇨🇱';
+            if (regionLower.includes('australia')) return '🇦🇺';
+            if (regionLower.includes('new zealand') || regionLower.includes('nz') || regionLower.includes('marlborough')) return '🇳🇿';
+            if (regionLower.includes('germany')) return '🇩🇪';
+            if (regionLower.includes('portugal')) return '🇵🇹';
+            if (regionLower.includes('south africa')) return '🇿🇦';
+            if (regionLower.includes('austria')) return '🇦🇹';
+            if (regionLower.includes('greece')) return '🇬🇷';
+            return '🍷'; // default fallback
+        }
+
         // State
         let selectedBudget = '$';
 
@@ -913,7 +932,7 @@
                             <div class="ai-why-label">Why it works</div>
                             <p class="ai-wine-why">${wine.why}</p>
                             <div class="ai-wine-bottle">
-                                <span class="ai-bottle-icon">🍾</span>
+                                <span class="ai-bottle-icon">${getCountryFlag(wine.region)}</span>
                                 <div class="ai-bottle-info">
                                     <div class="ai-bottle-name">${wine.bottle}</div>
                                     <div class="ai-bottle-price">${wine.price}</div>
