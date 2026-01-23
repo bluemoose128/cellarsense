@@ -776,25 +776,24 @@
             ]
         };
 
-        // Get flag emoji based on region
-        function getCountryFlag(region) {
-            const regionLower = region.toLowerCase();
-            if (regionLower.includes('france')) return '🇫🇷';
-            if (regionLower.includes('italy')) return '🇮🇹';
-            if (regionLower.includes('spain')) return '🇪🇸';
-            if (regionLower.includes('usa') || regionLower.includes('california') || regionLower.includes('napa') || regionLower.includes('oregon')) return '🇺🇸';
-            if (regionLower.includes('argentina')) return '🇦🇷';
-            if (regionLower.includes('chile')) return '🇨🇱';
-            if (regionLower.includes('australia')) return '🇦🇺';
-            if (regionLower.includes('new zealand') || regionLower.includes('nz') || regionLower.includes('marlborough')) return '🇳🇿';
-            if (regionLower.includes('germany')) return '🇩🇪';
-            if (regionLower.includes('portugal')) return '🇵🇹';
-            if (regionLower.includes('south africa')) return '🇿🇦';
-            if (regionLower.includes('austria')) return '🇦🇹';
-            if (regionLower.includes('greece')) return '🇬🇷';
-            return '🍷'; // default fallback
-        }
-
+// Get flag emoji based on region
+function getCountryFlag(region) {
+    const regionLower = region.toLowerCase();
+    if (regionLower.includes('france') || regionLower.includes('bordeaux') || regionLower.includes('burgundy') || regionLower.includes('champagne') || regionLower.includes('rhone') || regionLower.includes('loire') || regionLower.includes('alsace') || regionLower.includes('provence')) return '🇫🇷';
+    if (regionLower.includes('italy') || regionLower.includes('tuscany') || regionLower.includes('piedmont') || regionLower.includes('veneto') || regionLower.includes('sicily') || regionLower.includes('alto adige')) return '🇮🇹';
+    if (regionLower.includes('spain') || regionLower.includes('rioja') || regionLower.includes('ribera') || regionLower.includes('priorat')) return '🇪🇸';
+    if (regionLower.includes('usa') || regionLower.includes('california') || regionLower.includes('napa') || regionLower.includes('sonoma') || regionLower.includes('oregon') || regionLower.includes('washington') || regionLower.includes('willamette') || regionLower.includes('paso robles') || regionLower.includes('santa barbara') || regionLower.includes('finger lakes') || regionLower.includes('virginia')) return '🇺🇸';
+    if (regionLower.includes('argentina') || regionLower.includes('mendoza')) return '🇦🇷';
+    if (regionLower.includes('chile') || regionLower.includes('maipo') || regionLower.includes('colchagua') || regionLower.includes('casablanca')) return '🇨🇱';
+    if (regionLower.includes('australia') || regionLower.includes('barossa') || regionLower.includes('mclaren') || regionLower.includes('hunter valley') || regionLower.includes('margaret river')) return '🇦🇺';
+    if (regionLower.includes('new zealand') || regionLower.includes('nz') || regionLower.includes('marlborough') || regionLower.includes('hawke')) return '🇳🇿';
+    if (regionLower.includes('germany') || regionLower.includes('mosel') || regionLower.includes('rheingau') || regionLower.includes('pfalz')) return '🇩🇪';
+    if (regionLower.includes('portugal') || regionLower.includes('douro') || regionLower.includes('alentejo') || regionLower.includes('vinho verde')) return '🇵🇹';
+    if (regionLower.includes('south africa') || regionLower.includes('stellenbosch') || regionLower.includes('swartland')) return '🇿🇦';
+    if (regionLower.includes('austria') || regionLower.includes('wachau')) return '🇦🇹';
+    if (regionLower.includes('greece') || regionLower.includes('santorini')) return '🇬🇷';
+    return '🍷'; // default fallback
+}
         // State
         let selectedBudget = '$';
 
