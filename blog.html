@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | CellarSense</title>
+    <meta name="description" content="Wine tips, wedding planning advice, and insights from a WSET-certified wine enthusiast.">
+    <link rel="icon" type="image/png" href="images/Updated_favicon.png">
+    <link rel="apple-touch-icon" href="images/Updated_favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --burgundy: #722F37;
+            --burgundy-dark: #5a252c;
+            --burgundy-light: #8b3d47;
+            --gold: #C9A962;
+            --gold-light: #d4b978;
+            --cream: #FAF8F5;
+            --cream-dark: #EDE8E0;
+            --text-dark: #2D2D2D;
+            --text-medium: #5A5A5A;
+            --text-light: #8A8A8A;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--cream);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            padding: 0.5rem 2rem;
+            height: 85px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .nav-logo {
+            height: 160px;
+            width: auto;
+            margin: -37px 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.75rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-medium);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--burgundy);
+        }
+
+        .nav-free-tool {
+            color: var(--burgundy) !important;
+            font-weight: 600 !important;
+            background: var(--cream);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+        }
+
+        .nav-free-tool:hover {
+            background: var(--cream-dark);
+        }
+
+        /* Hide hamburger on desktop */
+        .hamburger {
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.7rem 1.4rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--burgundy);
+            color: white !important;
+        }
+
+        .btn-primary:hover {
+            background: var(--burgundy-dark);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 7rem 2rem 4rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 1rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: var(--burgundy);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-medium);
+            font-size: 1.05rem;
+        }
+
+        .gold-line {
+            width: 50px;
+            height: 2px;
+            background: var(--gold);
+            margin: 1rem auto;
+        }
+
+        /* Blog Posts List */
+        .blog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.75rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            transition: box-shadow 0.2s;
+        }
+
+        .blog-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .blog-card h2 {
+            font-size: 1.4rem;
+            color: var(--burgundy);
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-card h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .blog-card h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .blog-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-card p {
+            color: var(--text-medium);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            display: inline-block;
+            margin-top: 0.75rem;
+            color: var(--burgundy);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Featured Blog Card */
+        .blog-card.featured {
+            background: linear-gradient(135deg, var(--burgundy) 0%, #8b3d47 100%);
+            color: white;
+            position: relative;
+        }
+
+        .blog-card.featured h2 a {
+            color: white;
+        }
+
+        .blog-card.featured .blog-meta {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .blog-card.featured p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .blog-card.featured .read-more {
+            color: var(--gold);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--gold);
+            color: var(--text-dark);
+            padding: 0.3rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Coming Soon State */
+        .coming-soon {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .coming-soon h2 {
+            font-size: 1.5rem;
+            color: var(--burgundy);
+            margin-bottom: 0.75rem;
+        }
+
+        .coming-soon p {
+            color: var(--text-medium);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-logo {
+            height: 150px;
+            width: auto;
+            margin-bottom: 0.75rem;
+            opacity: 0.9;
+        }
+
+        footer p {
+            opacity: 0.5;
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            margin: 0 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        .footer-links {
+            margin-bottom: 0.75rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0.5rem 1rem;
+            }
+
+            .nav-logo {
+                height: 100px;
+                margin: -10px 0;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.75rem;
+                border-bottom: 1px solid var(--cream-dark);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 0.5rem 0;
+            }
+
+            .nav-links .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .hamburger {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                padding: 10px;
+            }
+
+            .hamburger span {
+                width: 28px;
+                height: 3px;
+                background: var(--burgundy);
+                transition: 0.3s;
+                border-radius: 2px;
+            }
+
+            main {
+                padding: 6rem 1.25rem 3rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="/"><img src="images/Horizontal_Burgundy.png" alt="CellarSense" class="nav-logo"></a>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links">
+    <a href="/#how-it-works">How It Works</a>
+    <a href="/#whats-included">What's Included</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/#faq">FAQ</a>
+    <a href="/app.html" class="nav-free-tool">Free Tool</a>
+    <a href="https://cal.com/anthony-cicconi-b0opmf/cellarsense-complete" class="btn btn-primary">Book Now</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h1>Blog</h1>
+            <div class="gold-line"></div>
+            <p>Wine tips and wedding planning insights</p>
+        </div>
+
+        <div class="blog-list">
+            <!-- Featured Pillar Article -->
+            <article class="blog-card featured">
+                <div class="featured-badge">Complete Guide</div>
+                <h2><a href="/blog/wedding-wine-guide.html">Wedding Wine Guide: Exactly What to Buy (and How Much)</a></h2>
+                <div class="blog-meta">January 22, 2026</div>
+                <p>The complete guide to wedding wine. How much you need, what types to serve, budgeting tips, where to buy, and day-of logistics.</p>
+                <a href="/blog/wedding-wine-guide.html" class="read-more">Read the full guide →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/start-wine-collection.html">How to Start a Wine Collection (Even in a Small Space)</a></h2>
+                <div class="blog-meta">January 20, 2026</div>
+                <p>You don't need a cellar or a big budget to start collecting wine. Here's a practical guide to beginning your collection the right way.</p>
+                <a href="/blog/start-wine-collection.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/find-wine-deals.html">How to Find Great Wine Deals (Without Sacrificing Quality)</a></h2>
+                <div class="blog-meta">January 15, 2026</div>
+                <p>You don't have to spend a lot to drink well. Here's where to find wines that over-deliver for the price.</p>
+                <a href="/blog/find-wine-deals.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/make-wine-taste-better.html">How to Make Any Wine Taste Better (Simple Tips That Work)</a></h2>
+                <div class="blog-meta">January 10, 2026</div>
+                <p>Temperature, decanting, and a few other simple tricks can make the wine you already have taste noticeably better.</p>
+                <a href="/blog/make-wine-taste-better.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/navigate-wine-list.html">How to Navigate a Huge Wine List (Without Panicking)</a></h2>
+                <div class="blog-meta">January 5, 2026</div>
+                <p>Facing a 20-page wine list? Here's how to find something great without spending an hour reading.</p>
+                <a href="/blog/navigate-wine-list.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/is-wine-healthy.html">Is Wine Actually Healthy? What the Science Says</a></h2>
+                <div class="blog-meta">December 20, 2025</div>
+                <p>The honest truth about wine and health. What the research shows, what it doesn't, and how to think about it sensibly.</p>
+                <a href="/blog/is-wine-healthy.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/food-pairing-101.html">Wine and Food Pairing 101: The Only Rules That Matter</a></h2>
+                <div class="blog-meta">December 8, 2025</div>
+                <p>Wine pairing doesn't have to be complicated. Learn the few principles that actually matter, then drink what you enjoy.</p>
+                <a href="/blog/food-pairing-101.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/how-to-store-wine.html">How to Store Wine at Home (No Cellar Required)</a></h2>
+                <div class="blog-meta">November 25, 2025</div>
+                <p>You don't need a wine cellar to store wine properly. Here's what actually matters.</p>
+                <a href="/blog/how-to-store-wine.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/order-wine-for-table.html">How to Order Wine for the Whole Table (With Confidence)</a></h2>
+                <div class="blog-meta">November 10, 2025</div>
+                <p>Ordering wine for a group doesn't have to be stressful. Here's how to pick bottles everyone will enjoy.</p>
+                <a href="/blog/order-wine-for-table.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/host-wine-tasting.html">How to Host a Wine Tasting at Home (Without Being Pretentious)</a></h2>
+                <div class="blog-meta">October 28, 2025</div>
+                <p>Hosting a wine tasting doesn't require fancy glasses or expert credentials. Here's how to throw one that's actually fun.</p>
+                <a href="/blog/host-wine-tasting.html" class="read-more">Read more →</a>
+            </article>
+
+            <article class="blog-card">
+                <h2><a href="/blog/airplane-wine.html">How to Order Wine on an Airplane (And Actually Enjoy It)</a></h2>
+                <div class="blog-meta">October 15, 2025</div>
+                <p>Your taste buds work differently at 35,000 feet. Here's how to pick wines that actually taste good when you're flying.</p>
+                <a href="/blog/airplane-wine.html" class="read-more">Read more →</a>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <img src="images/Horizontal_White.png" alt="CellarSense" class="footer-logo">
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/blog.html">Blog</a>
+            <a href="/cdn-cgi/l/email-protection#630b060f0f0c2300060f0f021110060d10064d020a">Contact</a>
+        </div>
+        <p>© 2026 CellarSense. All rights reserved.</p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><scri
