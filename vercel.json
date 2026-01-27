@@ -1,4 +1,10 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "functions": {
+    "api/generate-pdf.js": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  }
 }
